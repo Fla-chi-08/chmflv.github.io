@@ -1,78 +1,10 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invito 18° Compleanno – Flavio</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<!-- Firebase compat -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- aggiungi type="button" ai button che NON devono fare submit -->
+<button type="button" id="adminBtn">admin</button>
 
-<style>
-body{margin:0;font-family:'Poppins',sans-serif;background:#0c0c14;color:white;display:flex;justify-content:center;align-items:center;min-height:100vh}
-.card{width:100%;max-width:420px;background:#151528;padding:24px;border-radius:18px}
-.hidden{display:none}
-button{width:100%;padding:14px;margin-top:12px;border:none;border-radius:14px;background:#7b6cff;color:white;font-weight:600}
-input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:none}
-#adminBtn{position:fixed;top:10px;right:10px;background:none;border:none;color:#aaa}
-.admin{max-width:800px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-
-<button id="adminBtn" onclick="openLogin()">admin</button>
-
-<div class="card" id="lang">
-<h2>Choose language / Scegli lingua</h2>
-<button onclick="setLang('it')">Italiano</button>
-<button onclick="setLang('en')">English</button>
-</div>
-
-<div class="card hidden" id="form">
-<h2 id="title"></h2>
-<form onsubmit="sendData(event)">
-<select id="partecipazione" required></select>
-<input id="nome" required placeholder="Nome">
-<input id="allergie" placeholder="Allergie">
-<button type="submit">Invia</button>
-</form>
-</div>
-
-<div class="card hidden admin" id="login">
-<h2>Admin</h2>
-<input type="password" id="pwd" placeholder="Password">
-<button onclick="login()">Accedi</button>
-</div>
-
-<div class="card hidden admin" id="dashboard">
-<h2>Risposte</h2>
-<canvas id="chart"></canvas>
-<div id="lista"></div>
-</div>
-
+<!-- nella parte JS -->
 <script>
-  // 🔥 Firebase compat config
-  const firebaseConfig = {
-    apiKey: "AIzaSyD52wn88EGkEHRssIfpRbW35Og8-Y6dqY8",
-    authDomain: "diciottesimo-24e19.firebaseapp.com",
-    projectId: "diciottesimo-24e19",
-    storageBucket: "diciottesimo-24e19.firebasestorage.app",
-    messagingSenderId: "115904181457",
-    appId: "1:115904181457:web:7de1e3755dc6407f7f01f0",
-    measurementId: "G-4D679DRVH1"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  emailjs.init("YOUR_PUBLIC_KEY"); // sostituisci con la tua chiave EmailJS
-
-  // DOM elements
+document.addEventListener('DOMContentLoaded', () => {
+  // 🔹 DOM elements
   const langDiv = document.getElementById('lang');
   const formDiv = document.getElementById('form');
   const loginDiv = document.getElementById('login');
@@ -84,6 +16,7 @@ input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:n
   const pwd = document.getElementById('pwd');
   const lista = document.getElementById('lista');
   const chartCanvas = document.getElementById('chart');
+  const adminBtn = document.getElementById('adminBtn');
 
   let lang = 'it';
   const t = {
@@ -91,8 +24,12 @@ input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:n
     en: { title: 'RSVP Confirmation', yes: 'I will attend', no: 'I will not attend' }
   };
 
-  // 🔹 Funzioni
-  function setLang(l){
+  // Event listeners
+  adminBtn.addEventListener('click', () => {
+    loginDiv.classList.remove('hidden');
+  });
+
+  window.setLang = (l) => {
     lang = l;
     langDiv.classList.add('hidden');
     formDiv.classList.remove('hidden');
@@ -100,9 +37,9 @@ input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:n
     partecipazione.innerHTML = `<option></option>
       <option value="si">${t[l].yes}</option>
       <option value="no">${t[l].no}</option>`;
-  }
+  };
 
-  function sendData(e){
+  window.sendData = (e) => {
     e.preventDefault();
     const data = {
       nome: nome.value,
@@ -112,18 +49,14 @@ input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:n
     };
     db.collection('risposte').add(data)
       .then(() => {
-        emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{...data,to_email:'chmflv@gmail.com'});
+        // EmailJS deve avere chiavi reali
         alert('Risposta inviata');
         e.target.reset();
       })
       .catch(err => alert('Errore invio dati: '+err));
-  }
+  };
 
-  function openLogin(){
-    loginDiv.classList.remove('hidden');
-  }
-
-  function login(){
+  window.login = () => {
     if(pwd.value === 'admin18'){
       loginDiv.classList.add('hidden');
       dashboardDiv.classList.remove('hidden');
@@ -150,7 +83,6 @@ input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:n
     } else {
       alert('Password errata');
     }
-  }
+  };
+});
 </script>
-</body>
-</html>
