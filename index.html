@@ -7,6 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<!-- Firebase compat -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <style>
 body{margin:0;font-family:'Poppins',sans-serif;background:#0c0c14;color:white;display:flex;justify-content:center;align-items:center;min-height:100vh}
 .card{width:100%;max-width:420px;background:#151528;padding:24px;border-radius:18px}
@@ -51,108 +55,102 @@ input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:n
 <div id="lista"></div>
 </div>
 
-<!-- Firebase v9+ modules -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+<script>
+  // 🔥 Firebase compat config
+  const firebaseConfig = {
+    apiKey: "AIzaSyD52wn88EGkEHRssIfpRbW35Og8-Y6dqY8",
+    authDomain: "diciottesimo-24e19.firebaseapp.com",
+    projectId: "diciottesimo-24e19",
+    storageBucket: "diciottesimo-24e19.firebasestorage.app",
+    messagingSenderId: "115904181457",
+    appId: "1:115904181457:web:7de1e3755dc6407f7f01f0",
+    measurementId: "G-4D679DRVH1"
+  };
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyD52wn88EGkEHRssIfpRbW35Og8-Y6dqY8",
-  authDomain: "diciottesimo-24e19.firebaseapp.com",
-  projectId: "diciottesimo-24e19",
-  storageBucket: "diciottesimo-24e19.firebasestorage.app",
-  messagingSenderId: "115904181457",
-  appId: "1:115904181457:web:7de1e3755dc6407f7f01f0",
-  measurementId: "G-4D679DRVH1"
-};
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  emailjs.init("YOUR_PUBLIC_KEY"); // sostituisci con la tua chiave EmailJS
 
-// EmailJS init
-emailjs.init("YOUR_PUBLIC_KEY");
+  // DOM elements
+  const langDiv = document.getElementById('lang');
+  const formDiv = document.getElementById('form');
+  const loginDiv = document.getElementById('login');
+  const dashboardDiv = document.getElementById('dashboard');
+  const title = document.getElementById('title');
+  const partecipazione = document.getElementById('partecipazione');
+  const nome = document.getElementById('nome');
+  const allergie = document.getElementById('allergie');
+  const pwd = document.getElementById('pwd');
+  const lista = document.getElementById('lista');
+  const chartCanvas = document.getElementById('chart');
 
-// DOM elements
-const langDiv = document.getElementById('lang');
-const formDiv = document.getElementById('form');
-const loginDiv = document.getElementById('login');
-const dashboardDiv = document.getElementById('dashboard');
-const title = document.getElementById('title');
-const partecipazione = document.getElementById('partecipazione');
-const nome = document.getElementById('nome');
-const allergie = document.getElementById('allergie');
-const pwd = document.getElementById('pwd');
-const lista = document.getElementById('lista');
-const chartCanvas = document.getElementById('chart');
+  let lang = 'it';
+  const t = {
+    it: { title: 'Conferma partecipazione', yes: 'Partecipo', no: 'Non partecipo' },
+    en: { title: 'RSVP Confirmation', yes: 'I will attend', no: 'I will not attend' }
+  };
 
-let lang = 'it';
-const t = {
-  it: { title: 'Conferma partecipazione', yes: 'Partecipo', no: 'Non partecipo' },
-  en: { title: 'RSVP Confirmation', yes: 'I will attend', no: 'I will not attend' }
-};
-
-// Set language
-window.setLang = (l) => {
-  lang = l;
-  langDiv.classList.add('hidden');
-  formDiv.classList.remove('hidden');
-  title.innerText = t[l].title;
-  partecipazione.innerHTML = `<option></option>
+  // 🔹 Funzioni
+  function setLang(l){
+    lang = l;
+    langDiv.classList.add('hidden');
+    formDiv.classList.remove('hidden');
+    title.innerText = t[l].title;
+    partecipazione.innerHTML = `<option></option>
       <option value="si">${t[l].yes}</option>
       <option value="no">${t[l].no}</option>`;
-}
-
-// Send data
-window.sendData = async (e) => {
-  e.preventDefault();
-  const data = {
-    nome: nome.value,
-    partecipa: partecipazione.value,
-    allergie: allergie.value,
-    ts: Date.now()
-  };
-  try {
-    await addDoc(collection(db, "risposte"), data);
-    await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {...data, to_email:'chmflv@gmail.com'});
-    alert('Risposta inviata');
-    e.target.reset();
-  } catch(err) {
-    alert('Errore invio dati: ' + err);
   }
-}
 
-// Admin login
-window.openLogin = () => loginDiv.classList.remove('hidden');
-
-window.login = async () => {
-  if(pwd.value === 'admin18') {
-    loginDiv.classList.add('hidden');
-    dashboardDiv.classList.remove('hidden');
-
-    const snap = await getDocs(collection(db, "risposte"));
-    let si = 0, no = 0;
-    lista.innerHTML = '';
-    snap.forEach(doc => {
-      const data = doc.data();
-      data.partecipa === 'si' ? si++ : no++;
-      lista.innerHTML += `<p>${data.nome} – ${data.partecipa}</p>`;
-    });
-
-    new Chart(chartCanvas, {
-      type:'bar',
-      data:{
-        labels:['Si','No'],
-        datasets:[{data:[si,no], backgroundColor:['#7b6cff','#ff6b6b'] }]
-      },
-      options:{responsive:true, plugins:{legend:{display:false}}}
-    });
-
-  } else {
-    alert('Password errata');
+  function sendData(e){
+    e.preventDefault();
+    const data = {
+      nome: nome.value,
+      partecipa: partecipazione.value,
+      allergie: allergie.value,
+      ts: Date.now()
+    };
+    db.collection('risposte').add(data)
+      .then(() => {
+        emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{...data,to_email:'chmflv@gmail.com'});
+        alert('Risposta inviata');
+        e.target.reset();
+      })
+      .catch(err => alert('Errore invio dati: '+err));
   }
-}
+
+  function openLogin(){
+    loginDiv.classList.remove('hidden');
+  }
+
+  function login(){
+    if(pwd.value === 'admin18'){
+      loginDiv.classList.add('hidden');
+      dashboardDiv.classList.remove('hidden');
+
+      db.collection('risposte').get().then(snap => {
+        let si = 0, no = 0;
+        lista.innerHTML = '';
+        snap.forEach(d => {
+          const data = d.data();
+          data.partecipa === 'si' ? si++ : no++;
+          lista.innerHTML += `<p>${data.nome} – ${data.partecipa}</p>`;
+        });
+
+        new Chart(chartCanvas,{
+          type:'bar',
+          data:{
+            labels:['Si','No'],
+            datasets:[{data:[si,no], backgroundColor:['#7b6cff','#ff6b6b'] }]
+          },
+          options:{responsive:true, plugins:{legend:{display:false}}}
+        });
+      });
+
+    } else {
+      alert('Password errata');
+    }
+  }
 </script>
 </body>
 </html>
