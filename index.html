@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invito 18° Compleanno – Flavio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+body{margin:0;font-family:'Poppins',sans-serif;background:#0c0c14;color:white;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.card{width:100%;max-width:420px;background:#151528;padding:24px;border-radius:18px}
+.hidden{display:none}
+button{width:100%;padding:14px;margin-top:12px;border:none;border-radius:14px;background:#7b6cff;color:white;font-weight:600}
+input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:none}
+#adminBtn{position:fixed;top:10px;right:10px;background:none;border:none;color:#aaa}
+.admin{max-width:800px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<button id="adminBtn" onclick="openLogin()">admin</button>
+
+<div class="card" id="lang">
+<h2>Choose language / Scegli lingua</h2>
+<button onclick="setLang('it')">Italiano</button>
+<button onclick="setLang('en')">English</button>
+</div>
+
+<div class="card hidden" id="form">
+<h2 id="title"></h2>
+<form onsubmit="sendData(event)">
+<select id="partecipazione" required></select>
+<input id="nome" required>
+<input id="allergie">
+<button type="submit">Invia</button>
+</form>
+</div>
+
+<div class="card hidden admin" id="login">
+<h2>Admin</h2>
+<input type="password" id="pwd" placeholder="Password">
+<button onclick="login()">Accedi</button>
+</div>
+
+<div class="card hidden admin" id="dashboard">
+<h2>Risposte</h2>
+<canvas id="chart"></canvas>
+<div id="lista"></div>
+</div>
+
+<script>
+// 🔥 FIREBASE CONFIG (DA COMPILARE)
+const firebaseConfig = {
+ apiKey: "YOUR_API_KEY",
+ authDomain: "YOUR_PROJECT.firebaseapp.com",
+ projectId: "YOUR_PROJECT",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+emailjs.init("YOUR_PUBLIC_KEY");
+
+let lang='it';
+const t={it:{title:'Conferma partecipazione',yes:'Partecipo',no:'Non partecipo'},en:{title:'RSVP Confirmation',yes:'I will attend',no:'I will not attend'}};
+
+function setLang(l){lang=l;langDiv.classList.add('hidden');form.classList.remove('hidden');title.innerText=t[l].title;partecipazione.innerHTML=`<option></option><option value="si">${t[l].yes}</option><option value="no">${t[l].no}</option>`}
+
+async function sendData(e){
+ e.preventDefault();
+ const data={nome:nome.value,partecipa:partecipazione.value,allergie:allergie.value,ts:Date.now()};
+ await db.collection('risposte').add(data);
+ emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{...data,to_email:'chmflv@gmail.com'});
+ alert('Risposta inviata');
+ e.target.reset();
+}
+
+function openLogin(){loginDiv.classList.remove('hidden')}
+
+async function login(){
+ if(pwd.value==='admin18'){
+ loginDiv.classList.add('hidden');dashboard.classList.remove('hidden');
+ const snap=await db.collection('risposte').get();
+ let si=0,no=0;
+ snap.forEach(d=>{d.data().partecipa==='si'?si++:no++;lista.innerHTML+=`<p>${d.data().nome} – ${d.data().partecipa}</p>`});
+ new Chart(chart,{type:'bar',data:{labels:['Si','No'],datasets:[{data:[si,no]}]}});
+ } else alert('Password errata');
+}
+
+const langDiv=lang,form=form,loginDiv=login,dashboard=dashboard;
+</script>
+</body>
+</html>
