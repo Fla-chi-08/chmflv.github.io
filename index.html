@@ -23,17 +23,14 @@
         }
         
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            /* SFONDO CON LA TUA IMMAGINE */
+            background: linear-gradient(rgba(15, 12, 41, 0.85), rgba(36, 36, 62, 0.9)), url('https://i.ibb.co/1nJrmKM/2024-10-14.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
-            /* PER AGGIUNGERE UN'IMMAGINE DI SFONDO:
-               Sostituisci l'background sopra con:
-               background: linear-gradient(rgba(15, 12, 41, 0.85), rgba(36, 36, 62, 0.9)), url('URL_IMMAGINE');
-               background-size: cover;
-               background-attachment: fixed;
-               background-position: center;
-            */
         }
         
         .confetti {
@@ -321,7 +318,7 @@
             
             input, select, textarea {
                 padding: 12px;
-                font-size: 16px; /* Previene zoom su iOS */
+                font-size: 16px;
             }
             
             .btn {
@@ -486,33 +483,40 @@
         <div id="form" class="section hidden">
             <h2 id="formTitle">Conferma la tua partecipazione</h2>
             
-            <form id="rsvpForm" onsubmit="sendData(event)">
+            <!-- IL TUO ENDPOINT FORMSPREE È INTEGRATO QUI -->
+            <form id="rsvpForm" action="https://formspree.io/f/xreazzjo" method="POST">
+                <!-- Campo nascosto per reindirizzamento e lingua -->
+                <input type="hidden" name="_language" id="formLanguage" value="it">
+                <input type="hidden" name="_subject" value="Conferma 18° Compleanno Flavio Carlo">
+                <input type="hidden" name="_replyto" id="replyToField">
+                
                 <div class="form-group">
                     <label for="nome" id="nomeLabel">Nome e Cognome *</label>
-                    <input type="text" id="nome" required>
+                    <input type="text" id="nome" name="nome" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="email" id="emailLabel">Email *</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" name="email" required>
                     <span class="form-note" id="emailNote">Riceverai una conferma e i dettagli per aggiungere l'evento al calendario</span>
                 </div>
                 
                 <div class="form-group">
                     <label for="partecipazione" id="partecipazioneLabel">Parteciperai? *</label>
-                    <select id="partecipazione" required>
+                    <select id="partecipazione" name="partecipazione" required>
                         <option value=""></option>
+                        <!-- Le opzioni sono caricate da JavaScript -->
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label for="allergie" id="allergieLabel">Allergie o Intolleranze Alimentari</label>
-                    <textarea id="allergie" rows="3" placeholder="Nessuna"></textarea>
+                    <textarea id="allergie" name="allergie" rows="3" placeholder="Nessuna"></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="messaggio" id="messaggioLabel">Messaggio per Flavio (opzionale)</label>
-                    <textarea id="messaggio" rows="3" placeholder="Scrivi un messaggio..."></textarea>
+                    <textarea id="messaggio" name="messaggio" rows="3" placeholder="Scrivi un messaggio..."></textarea>
                 </div>
                 
                 <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
@@ -598,7 +602,7 @@
         <footer>
             <p>Creato con ❤️ per il 18° compleanno di Flavio Carlo</p>
             <p style="margin-top: 10px;">
-                <i class="fas fa-code"></i> Powered by Firebase & Chart.js
+                <i class="fas fa-code"></i> Powered by Firebase & Formspree
             </p>
         </footer>
     </div>
@@ -769,6 +773,9 @@
             // Nascondi messaggio di successo se presente
             document.getElementById('successMessage').classList.add('hidden');
             
+            // Imposta la lingua nascosta per Formspree
+            document.getElementById('formLanguage').value = l;
+            
             // Aggiorna tutti i testi
             updateTexts();
             
@@ -843,7 +850,7 @@
             document.getElementById('rsvpForm').reset();
         }
         
-        // Invia dati a Firebase
+        // Invia dati a Formspree E Firebase
         function sendData(e) {
             e.preventDefault();
             
@@ -864,7 +871,17 @@
                 return;
             }
             
-            const data = {
+            // Imposta l'email per la risposta automatica di Formspree
+            document.getElementById('replyToField').value = email;
+            
+            // Mostra messaggio di caricamento
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${translations[lang].sending}`;
+            submitBtn.disabled = true;
+            
+            // 1. PRIMA: Prepara i dati per Firebase
+            const firebaseData = {
                 nome: nome,
                 email: email,
                 partecipa: partecipa,
@@ -873,37 +890,34 @@
                 lingua: lang,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 dataInvio: new Date().toLocaleString(),
-                emailInviata: false // Flag per tracciare se l'email è stata inviata
+                emailInviata: false
             };
             
-            // Mostra messaggio di caricamento
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${translations[lang].sending}`;
-            submitBtn.disabled = true;
-            
-            // Salva su Firestore
-            db.collection('risposte').add(data)
+            // 2. SECONDO: Salva su Firebase
+            db.collection('risposte').add(firebaseData)
                 .then(() => {
-                    // Successo
-                    document.getElementById('successMessage').classList.remove('hidden');
+                    console.log('✅ Dati salvati su Firebase');
                     
-                    // Reset form
+                    // 3. TERZO: Invia il form a Formspree (che invierà le email)
+                    // Questo avvia l'invio tramite l'azione del form che abbiamo impostato
+                    document.getElementById('rsvpForm').submit();
+                    
+                    // Mostra messaggio di successo (anche se il submit reindirizza)
+                    document.getElementById('successMessage').classList.remove('hidden');
                     document.getElementById('rsvpForm').reset();
                     
                     // Scrolla al messaggio di successo
                     document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
                     
-                    // Dopo 5 secondi, torna alla selezione lingua
+                    // Ripristina il pulsante dopo 3 secondi
                     setTimeout(() => {
-                        changeLang();
                         submitBtn.innerHTML = originalText;
                         submitBtn.disabled = false;
-                    }, 5000);
+                    }, 3000);
                 })
                 .catch(err => {
-                    // Errore
-                    console.error('Errore Firestore:', err);
+                    // Errore Firebase
+                    console.error('❌ Errore Firestore:', err);
                     alert(translations[lang].sendingError);
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
@@ -926,7 +940,7 @@
         function login() {
             const password = document.getElementById('pwd').value;
             
-            // MODIFICA QUESTA PASSWORD!
+            // MODIFICA QUESTA PASSWORD CON UNA SICURA!
             if (password === 'admin18') {
                 closeLogin();
                 document.getElementById('adminBtn').classList.add('hidden');
@@ -970,7 +984,7 @@
                         const allergie = data.allergie || '-';
                         const messaggio = data.messaggio ? `<br><em>"${data.messaggio}"</em>` : '';
                         const date = data.dataInvio || new Date().toLocaleDateString();
-                        const emailInviata = data.emailInviata ? '<span style="color:#4ecdc4">✓</span>' : '<span style="color:#ff6b6b">✗</span>';
+                        const emailInviata = data.emailInviata ? '<span style="color:#4ecdc4">✓ Email inv.</span>' : '<span style="color:#ff6b6b">✗ Email non inv.</span>';
                         
                         html += `
                             <div class="guest-item">
@@ -1097,6 +1111,9 @@
         
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', () => {
+            // Sovrascrivi l'invio predefinito del form
+            document.getElementById('rsvpForm').addEventListener('submit', sendData);
+            
             // Testa connessione Firebase
             db.collection('risposte').get()
                 .then(() => {
