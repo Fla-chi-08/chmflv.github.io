@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎉 Il Mio 18° Compleanno</title>
+    <title>🎉 Il 18° Compleanno di Flavio Carlo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -27,6 +27,13 @@
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
+            /* PER AGGIUNGERE UN'IMMAGINE DI SFONDO:
+               Sostituisci l'background sopra con:
+               background: linear-gradient(rgba(15, 12, 41, 0.85), rgba(36, 36, 62, 0.9)), url('URL_IMMAGINE');
+               background-size: cover;
+               background-attachment: fixed;
+               background-position: center;
+            */
         }
         
         .confetti {
@@ -284,7 +291,41 @@
             }
             
             .section {
-                padding: 20px;
+                padding: 25px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .lang-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .lang-btn, .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 20px 15px;
+            }
+            
+            input, select, textarea {
+                padding: 12px;
+                font-size: 16px; /* Previene zoom su iOS */
+            }
+            
+            .btn {
+                padding: 14px 25px;
             }
         }
         
@@ -360,6 +401,13 @@
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.9rem;
         }
+        
+        .form-note {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -377,41 +425,42 @@
             <div class="birthday-icon">
                 🎂
             </div>
-            <h1 id="mainTitle">Il Mio 18° Compleanno!</h1>
-            <p class="subtitle" id="subtitle">Una celebrazione indimenticabile</p>
+            <h1 id="mainTitle">Il 18° Compleanno di Flavio Carlo!</h1>
+            <p class="subtitle" id="subtitle">Un giorno speciale da festeggiare insieme</p>
             
             <div class="info-grid">
                 <div class="info-card">
                     <i class="fas fa-calendar-alt"></i>
                     <h3 id="dateTitle">Data</h3>
-                    <p id="dateValue">[Inserisci la data qui]</p>
+                    <p id="dateValue">Mercoledì, 1 Aprile 2026</p>
                 </div>
                 <div class="info-card">
                     <i class="fas fa-map-marker-alt"></i>
                     <h3 id="locationTitle">Luogo</h3>
-                    <p id="locationValue">[Inserisci il luogo qui]</p>
+                    <p id="locationValue">Casina dei nonni</p>
                 </div>
                 <div class="info-card">
                     <i class="fas fa-clock"></i>
                     <h3 id="timeTitle">Ora</h3>
-                    <p id="timeValue">[Inserisci l'orario qui]</p>
+                    <p id="timeValue">20:30</p>
                 </div>
             </div>
             
             <div class="pulse">
-                <a href="#" id="mapLink" class="btn" target="_blank">
-                    <i class="fas fa-map"></i> Vedi sulla Mappa
+                <a href="https://maps.app.goo.gl/kewUkDAfJCAtCezHA" id="mapLink" class="btn" target="_blank">
+                    <i class="fas fa-map"></i> <span id="mapBtn">Vedi sulla Mappa</span>
                 </a>
             </div>
         </header>
         
-        <!-- Sezione Mappa (placeholder) -->
+        <!-- Sezione Mappa -->
         <div class="section">
             <h2><i class="fas fa-map-marked-alt"></i> <span id="mapTitle">Come Raggiungerci</span></h2>
             <div id="mapPlaceholder">
                 <div>
                     <i class="fas fa-map-pin" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                    <p id="mapText">La mappa sarà disponibile quando verrà scelto il luogo della festa</p>
+                    <p id="mapText">Festa alla "Casina dei nonni"</p>
+                    <p style="margin-top: 10px;">Clicca il pulsante sopra per aprire Google Maps</p>
                 </div>
             </div>
         </div>
@@ -444,6 +493,12 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="email" id="emailLabel">Email *</label>
+                    <input type="email" id="email" required>
+                    <span class="form-note" id="emailNote">Riceverai una conferma e i dettagli per aggiungere l'evento al calendario</span>
+                </div>
+                
+                <div class="form-group">
                     <label for="partecipazione" id="partecipazioneLabel">Parteciperai? *</label>
                     <select id="partecipazione" required>
                         <option value=""></option>
@@ -456,16 +511,16 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="messaggio" id="messaggioLabel">Messaggio per il festeggiato (opzionale)</label>
+                    <label for="messaggio" id="messaggioLabel">Messaggio per Flavio (opzionale)</label>
                     <textarea id="messaggio" rows="3" placeholder="Scrivi un messaggio..."></textarea>
                 </div>
                 
-                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
                     <button type="submit" class="btn" id="submitBtn">
-                        <i class="fas fa-paper-plane"></i> Invia Risposta
+                        <i class="fas fa-paper-plane"></i> <span id="submitText">Invia Risposta</span>
                     </button>
                     <button type="button" onclick="changeLang()" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Torna indietro
+                        <i class="fas fa-arrow-left"></i> <span id="backText">Torna indietro</span>
                     </button>
                 </div>
             </form>
@@ -474,6 +529,7 @@
                 <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--accent); margin-bottom: 15px;"></i>
                 <h3 id="successTitle">Grazie!</h3>
                 <p id="successText">La tua risposta è stata inviata con successo.</p>
+                <p class="form-note" style="margin-top: 10px;" id="emailConfirm">Riceverai una email di conferma a breve</p>
             </div>
         </div>
         
@@ -488,10 +544,10 @@
             
             <div style="display: flex; gap: 15px; margin-top: 30px;">
                 <button onclick="login()" class="btn">
-                    <i class="fas fa-sign-in-alt"></i> Accedi
+                    <i class="fas fa-sign-in-alt"></i> <span id="loginBtn">Accedi</span>
                 </button>
                 <button onclick="closeLogin()" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Annulla
+                    <i class="fas fa-times"></i> <span id="cancelBtn">Annulla</span>
                 </button>
             </div>
             
@@ -540,7 +596,7 @@
         
         <!-- Footer -->
         <footer>
-            <p>Creato con ❤️ per il mio 18° compleanno</p>
+            <p>Creato con ❤️ per il 18° compleanno di Flavio Carlo</p>
             <p style="margin-top: 10px;">
                 <i class="fas fa-code"></i> Powered by Firebase & Chart.js
             </p>
@@ -576,19 +632,19 @@
         const translations = {
             it: {
                 // Header
-                mainTitle: "Il Mio 18° Compleanno!",
-                subtitle: "Una celebrazione indimenticabile",
+                mainTitle: "Il 18° Compleanno di Flavio Carlo!",
+                subtitle: "Un giorno speciale da festeggiare insieme",
                 dateTitle: "Data",
-                dateValue: "Sabato, 15 Giugno 2024",
+                dateValue: "Mercoledì, 1 Aprile 2026",
                 locationTitle: "Luogo",
-                locationValue: "Da definire",
+                locationValue: "Casina dei nonni",
                 timeTitle: "Ora",
-                timeValue: "Dalle 20:00 in poi",
+                timeValue: "20:30",
                 mapBtn: "Vedi sulla Mappa",
                 
                 // Mappa
                 mapTitle: "Come Raggiungerci",
-                mapText: "La mappa sarà disponibile quando verrà scelto il luogo della festa",
+                mapText: "Festa alla 'Casina dei nonni'",
                 
                 // Lingua
                 langTitle: "Seleziona Lingua",
@@ -597,17 +653,20 @@
                 // Form
                 formTitle: "Conferma la tua partecipazione",
                 nomeLabel: "Nome e Cognome *",
+                emailLabel: "Email *",
+                emailNote: "Riceverai una conferma e i dettagli per aggiungere l'evento al calendario",
                 partecipazioneLabel: "Parteciperai? *",
                 allergieLabel: "Allergie o Intolleranze Alimentari",
-                messaggioLabel: "Messaggio per il festeggiato (opzionale)",
+                messaggioLabel: "Messaggio per Flavio (opzionale)",
                 yesOption: "Sì, ci sarò! 🎉",
                 noOption: "No, purtroppo non posso 😢",
-                submitBtn: "Invia Risposta",
-                backBtn: "Torna indietro",
+                submitText: "Invia Risposta",
+                backText: "Torna indietro",
                 
                 // Successo
                 successTitle: "Grazie!",
                 successText: "La tua risposta è stata inviata con successo.",
+                emailConfirm: "Riceverai una email di conferma a breve",
                 
                 // Admin
                 loginTitle: "Accesso Admin",
@@ -633,19 +692,19 @@
             },
             en: {
                 // Header
-                mainTitle: "My 18th Birthday Party!",
-                subtitle: "An unforgettable celebration",
+                mainTitle: "Flavio Carlo's 18th Birthday Party!",
+                subtitle: "A special day to celebrate together",
                 dateTitle: "Date",
-                dateValue: "Saturday, June 15, 2024",
+                dateValue: "Wednesday, April 1, 2026",
                 locationTitle: "Location",
-                locationValue: "To be determined",
+                locationValue: "Grandparents' cottage",
                 timeTitle: "Time",
-                timeValue: "From 8:00 PM onwards",
+                timeValue: "8:30 PM",
                 mapBtn: "View on Map",
                 
                 // Map
                 mapTitle: "How to Get There",
-                mapText: "The map will be available once the party location is chosen",
+                mapText: "Party at the 'Grandparents' cottage'",
                 
                 // Language
                 langTitle: "Select Language",
@@ -654,17 +713,20 @@
                 // Form
                 formTitle: "Confirm Your Attendance",
                 nomeLabel: "Full Name *",
+                emailLabel: "Email *",
+                emailNote: "You will receive a confirmation and details to add the event to your calendar",
                 partecipazioneLabel: "Will you attend? *",
                 allergieLabel: "Food Allergies or Intolerances",
-                messaggioLabel: "Message for the birthday person (optional)",
+                messaggioLabel: "Message for Flavio (optional)",
                 yesOption: "Yes, I'll be there! 🎉",
                 noOption: "No, unfortunately I can't 😢",
-                submitBtn: "Send Response",
-                backBtn: "Go Back",
+                submitText: "Send Response",
+                backText: "Go Back",
                 
                 // Success
                 successTitle: "Thank You!",
                 successText: "Your response has been sent successfully.",
+                emailConfirm: "You will receive a confirmation email shortly",
                 
                 // Admin
                 loginTitle: "Admin Login",
@@ -728,9 +790,12 @@
             document.getElementById('mainTitle').textContent = t.mainTitle;
             document.getElementById('subtitle').textContent = t.subtitle;
             document.getElementById('dateTitle').textContent = t.dateTitle;
+            document.getElementById('dateValue').textContent = t.dateValue;
             document.getElementById('locationTitle').textContent = t.locationTitle;
+            document.getElementById('locationValue').textContent = t.locationValue;
             document.getElementById('timeTitle').textContent = t.timeTitle;
-            document.getElementById('mapLink').innerHTML = `<i class="fas fa-map"></i> ${t.mapBtn}`;
+            document.getElementById('timeValue').textContent = t.timeValue;
+            document.getElementById('mapBtn').textContent = t.mapBtn;
             
             // Mappa
             document.getElementById('mapTitle').textContent = t.mapTitle;
@@ -743,16 +808,24 @@
             // Form
             document.getElementById('formTitle').textContent = t.formTitle;
             document.getElementById('nomeLabel').textContent = t.nomeLabel;
+            document.getElementById('emailLabel').textContent = t.emailLabel;
+            document.getElementById('emailNote').textContent = t.emailNote;
             document.getElementById('partecipazioneLabel').textContent = t.partecipazioneLabel;
             document.getElementById('allergieLabel').textContent = t.allergieLabel;
             document.getElementById('messaggioLabel').textContent = t.messaggioLabel;
-            document.getElementById('submitBtn').innerHTML = `<i class="fas fa-paper-plane"></i> ${t.submitBtn}`;
-            document.querySelector('button[onclick="changeLang()"]').innerHTML = `<i class="fas fa-arrow-left"></i> ${t.backBtn}`;
+            document.getElementById('submitText').textContent = t.submitText;
+            document.getElementById('backText').textContent = t.backText;
+            
+            // Successo
+            document.getElementById('successTitle').textContent = t.successTitle;
+            document.getElementById('successText').textContent = t.successText;
+            document.getElementById('emailConfirm').textContent = t.emailConfirm;
             
             // Admin
             document.getElementById('loginTitle').textContent = t.loginTitle;
             document.getElementById('passwordLabel').textContent = t.passwordLabel;
-            document.querySelector('button[onclick="login()"]').innerHTML = `<i class="fas fa-sign-in-alt"></i> ${t.loginBtn}`;
+            document.getElementById('loginBtn').textContent = t.loginBtn;
+            document.getElementById('cancelBtn').textContent = t.cancelBtn;
             document.getElementById('dashboardTitle').textContent = t.dashboardTitle;
             document.getElementById('logoutBtn').textContent = t.logoutBtn;
             document.getElementById('totalLabel').textContent = t.totalLabel;
@@ -775,23 +848,32 @@
             e.preventDefault();
             
             const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
             const partecipa = document.getElementById('partecipazione').value;
             const allergie = document.getElementById('allergie').value.trim() || 'Nessuna';
             const messaggio = document.getElementById('messaggio').value.trim() || '';
             
-            if (!nome || !partecipa) {
+            if (!nome || !email || !partecipa) {
                 alert(translations[lang].requiredFields);
+                return;
+            }
+            
+            // Validazione email semplice
+            if (!email.includes('@') || !email.includes('.')) {
+                alert("Inserisci un indirizzo email valido");
                 return;
             }
             
             const data = {
                 nome: nome,
+                email: email,
                 partecipa: partecipa,
                 allergie: allergie,
                 messaggio: messaggio,
                 lingua: lang,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                dataInvio: new Date().toLocaleString()
+                dataInvio: new Date().toLocaleString(),
+                emailInviata: false // Flag per tracciare se l'email è stata inviata
             };
             
             // Mostra messaggio di caricamento
@@ -804,9 +886,6 @@
             db.collection('risposte').add(data)
                 .then(() => {
                     // Successo
-                    const t = translations[lang];
-                    document.getElementById('successTitle').textContent = t.successTitle;
-                    document.getElementById('successText').textContent = t.successText;
                     document.getElementById('successMessage').classList.remove('hidden');
                     
                     // Reset form
@@ -884,16 +963,19 @@
                         }
                         
                         const nome = data.nome || 'N/A';
+                        const email = data.email || 'N/A';
                         const partecipa = data.partecipa === 'si' 
                             ? `<span style="color: #4ecdc4;">✅ ${translations[lang].yesLabel}</span>` 
                             : `<span style="color: #ff6b6b;">❌ ${translations[lang].noLabel}</span>`;
                         const allergie = data.allergie || '-';
                         const messaggio = data.messaggio ? `<br><em>"${data.messaggio}"</em>` : '';
                         const date = data.dataInvio || new Date().toLocaleDateString();
+                        const emailInviata = data.emailInviata ? '<span style="color:#4ecdc4">✓</span>' : '<span style="color:#ff6b6b">✗</span>';
                         
                         html += `
                             <div class="guest-item">
                                 <strong>${nome}</strong><br>
+                                Email: ${email} ${emailInviata}<br>
                                 ${partecipa} | ${translations[lang].allergieLabel}: ${allergie}${messaggio}<br>
                                 <small>${date}</small>
                             </div>
