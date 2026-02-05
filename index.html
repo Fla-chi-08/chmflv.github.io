@@ -30,7 +30,6 @@
             position: relative;
         }
         
-        /* Sovrapposizione leggera */
         body::before {
             content: '';
             position: fixed;
@@ -40,7 +39,6 @@
             z-index: -1;
         }
         
-        /* Emoji flottanti */
         .floating-emoji {
             position: fixed;
             font-size: 2rem;
@@ -69,7 +67,6 @@
             position: relative;
         }
         
-        /* Pulsante Admin */
         #adminBtn {
             position: fixed;
             top: 20px;
@@ -99,7 +96,6 @@
             display: none !important;
         }
         
-        /* Header Principale */
         .main-header {
             text-align: center;
             padding: 50px 40px;
@@ -107,9 +103,7 @@
             border-radius: 24px;
             margin: 30px auto 50px;
             border: 3px solid var(--color-sand);
-            box-shadow: 
-                0 15px 35px rgba(58, 45, 40, 0.1),
-                inset 0 0 0 2px var(--color-light);
+            box-shadow: 0 15px 35px rgba(58, 45, 40, 0.1), inset 0 0 0 2px var(--color-light);
             backdrop-filter: blur(8px);
             max-width: 900px;
             position: relative;
@@ -193,6 +187,42 @@
             overflow: hidden;
         }
         
+        .glass-card {
+            background: rgba(255, 252, 247, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.6) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+        }
+        
         .card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 20px 40px rgba(138, 155, 110, 0.15);
@@ -215,18 +245,18 @@
             transform: scaleX(1);
         }
         
-        .card i {
+        .card i, .glass-card i {
             font-size: 2.5rem;
             color: var(--color-terracotta);
             margin-bottom: 20px;
             transition: transform 0.3s;
         }
         
-        .card:hover i {
+        .card:hover i, .glass-card:hover i {
             transform: rotate(10deg) scale(1.1);
         }
         
-        .card h3 {
+        .card h3, .glass-card h3 {
             font-size: 1.1rem;
             color: var(--color-olive);
             margin-bottom: 12px;
@@ -235,7 +265,7 @@
             font-weight: 600;
         }
         
-        .card p {
+        .card p, .glass-card p {
             font-size: 1.3rem;
             color: var(--color-dark);
             font-weight: 700;
@@ -250,7 +280,6 @@
             opacity: 0.9;
         }
         
-        /* Pulsante Mappa */
         .map-btn-container {
             margin: 40px 0 20px;
         }
@@ -280,16 +309,13 @@
             letter-spacing: 0.5px;
         }
         
-        /* Sezione Form */
         .section {
             background: rgba(255, 252, 247, 0.97);
             border-radius: 24px;
             padding: 60px 50px;
             margin: 40px auto;
             border: 3px solid var(--color-sand);
-            box-shadow: 
-                0 15px 35px rgba(58, 45, 40, 0.1),
-                inset 0 0 0 2px var(--color-light);
+            box-shadow: 0 15px 35px rgba(58, 45, 40, 0.1), inset 0 0 0 2px var(--color-light);
             backdrop-filter: blur(8px);
             max-width: 900px;
             position: relative;
@@ -326,7 +352,6 @@
             line-height: 1.6;
         }
         
-        /* Selettore Lingua */
         .lang-selector {
             display: flex;
             justify-content: center;
@@ -366,7 +391,6 @@
             box-shadow: 0 8px 20px rgba(217, 125, 84, 0.15);
         }
         
-        /* Moduli */
         .form {
             max-width: 750px;
             margin: 0 auto;
@@ -443,7 +467,6 @@
             letter-spacing: 0.5px;
         }
         
-        /* Messaggio Successo */
         .success-message {
             background: rgba(167, 206, 203, 0.15);
             border: 2px solid var(--color-sky);
@@ -459,7 +482,6 @@
             animation: gentleAppear 0.6s ease;
         }
         
-        /* Sezioni Admin */
         #login, #dashboard {
             display: none;
             max-width: 900px;
@@ -506,7 +528,6 @@
             border: 2px solid var(--color-sand);
         }
         
-        /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 15px; }
             .main-header, .section { padding: 40px 25px; margin: 20px auto; }
@@ -522,16 +543,13 @@
     </style>
 </head>
 <body>
-    <!-- Container emoji flottanti -->
     <div id="emoji-container"></div>
     
-    <!-- Pulsante Admin -->
     <button id="adminBtn" class="hidden">
         <i class="fas fa-lock"></i> Admin
     </button>
     
     <div class="container">
-        <!-- Header con informazioni principali -->
         <header class="main-header">
             <div class="title-icon">
                 <i class="fas fa-guitar"></i> 🎉🎂
@@ -545,6 +563,13 @@
                     <h3>Quando 📅⏰</h3>
                     <p>1 Aprile 2026</p>
                     <p class="location-note">Ore 20:30</p>
+                </div>
+                
+                <div class="glass-card">
+                    <i class="fas fa-glass-cheers"></i>
+                    <h3>Celebra con noi! 🥂✨</h3>
+                    <p>Musica, cibo e allegria</p>
+                    <p class="location-note">Stile rustico Pugliese</p>
                 </div>
                 
                 <div class="card">
@@ -563,12 +588,10 @@
             </div>
         </header>
         
-        <!-- Sezione principale: Conferma presenza -->
         <div class="section">
             <h2 class="section-title">Conferma la tua presenza 📝✅</h2>
             <p class="section-subtitle">Scegli la lingua e compila il modulo per farci sapere se ci sarai 🎊👥</p>
             
-            <!-- Selettore Lingua -->
             <div class="lang-selector">
                 <button onclick="openForm('it')" class="lang-btn active" id="langBtnIt">
                     <i class="fas fa-flag"></i> Italiano
@@ -578,17 +601,10 @@
                 </button>
             </div>
             
-            <!-- Modulo Italiano -->
             <form id="form-it" class="form active">
                 <div class="form-group">
                     <label for="nome-it" class="required">Nome e Cognome</label>
                     <input type="text" id="nome-it" name="nome" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email-it" class="required">Email 📧</label>
-                    <input type="email" id="email-it" name="email" required>
-                    <small style="color: var(--color-olive); display: block; margin-top: 8px;">Riceverai una email di conferma con i dettagli</small>
                 </div>
                 
                 <div class="form-group">
@@ -621,17 +637,10 @@
                 </button>
             </form>
             
-            <!-- Modulo Inglese -->
             <form id="form-en" class="form">
                 <div class="form-group">
                     <label for="nome-en" class="required">Full Name</label>
                     <input type="text" id="nome-en" name="nome" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email-en" class="required">Email 📧</label>
-                    <input type="email" id="email-en" name="email" required>
-                    <small style="color: var(--color-olive); display: block; margin-top: 8px;">You will receive a confirmation email with details</small>
                 </div>
                 
                 <div class="form-group">
@@ -664,16 +673,13 @@
                 </button>
             </form>
             
-            <!-- Messaggio di Successo -->
             <div id="successMessage" class="success-message">
                 <i class="fas fa-check-circle" style="font-size: 3.5rem; color: var(--color-sky); margin-bottom: 25px;"></i>
                 <h3 id="successTitle" style="font-size: 2rem; margin-bottom: 15px;">Grazie! 🙏</h3>
-                <p id="successText" style="font-size: 1.2rem; line-height: 1.6;">La tua risposta è stata inviata con successo! Controlla la tua email per la conferma 📧✅</p>
-                <div id="emailInfo" style="margin-top: 20px; font-size: 0.95rem; color: var(--color-olive);"></div>
+                <p id="successText" style="font-size: 1.2rem; line-height: 1.6;">La tua risposta è stata inviata con successo!</p>
             </div>
         </div>
         
-        <!-- Login Admin -->
         <div id="login" class="section">
             <h2 class="section-title" style="color: var(--color-terracotta);">
                 <i class="fas fa-lock"></i> Accesso Admin 🔐
@@ -695,7 +701,6 @@
             </div>
         </div>
         
-        <!-- Dashboard Admin -->
         <div id="dashboard" class="section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
                 <h2 class="section-title" style="margin: 0; color: var(--color-terracotta);">
@@ -737,15 +742,10 @@
         </footer>
     </div>
 
-    <!-- Firebase, EmailJS SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <script>
-        // ========== CONFIGURAZIONI ==========
-        
-        // 1. FIREBASE (la tua configurazione)
         const firebaseConfig = {
             apiKey: "AIzaSyD52wn88EGkEHRssIfpRbW35Og8-Y6dqY8",
             authDomain: "diciottesimo-24e19.firebaseapp.com",
@@ -756,28 +756,13 @@
             measurementId: "G-4D679DRVH1"
         };
         
-        // Inizializza Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
         
-        // 2. EMAILJS - CON I TUOI CODICI
-        emailjs.init("iYy4aKNY76_cixPcW");
-        
-        // Configurazione EmailJS
-        const EMAILJS_CONFIG = {
-            serviceId: "service_pboa2nb",
-            templates: {
-                it: "template_h3otx4o", // Template italiano (gestisce sia Sì che No)
-                en: "template_w8kuh5j"  // Template inglese (gestisce sia Sì che No)
-            }
-        };
-        
-        // ========== VARIABILI GLOBALI ==========
         let currentLang = 'it';
         
-        // ========== EMOJI FLOTTANTI ==========
         function createFloatingEmojis() {
             const container = document.getElementById('emoji-container');
             const emojis = ['🎉', '🎂', '🎈', '🥳', '🎁', '✨', '🌟', '🎊', '🍕', '🍷', '🎵', '💃', '🕺', '😊', '🥂', '🎶', '🇮🇹', '🍝', '🎸', '⭐'];
@@ -797,9 +782,6 @@
             }
         }
         
-        // ========== FUNZIONI PRINCIPALI ==========
-        
-        // Mostra pulsante admin e crea emoji
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 document.getElementById('adminBtn').classList.remove('hidden');
@@ -807,12 +789,10 @@
             
             createFloatingEmojis();
             
-            // Verifica Firebase
             db.collection('risposte').limit(1).get()
                 .then(() => console.log('✅ Firebase connesso'))
                 .catch(err => console.warn('⚠️ Firebase:', err.message));
             
-            // Setup form submit handlers
             document.getElementById('form-it').addEventListener('submit', (e) => {
                 e.preventDefault();
                 submitForm('it');
@@ -824,7 +804,6 @@
             });
         });
         
-        // Apre il modulo nella lingua selezionata
         function openForm(lang) {
             currentLang = lang;
             
@@ -838,170 +817,64 @@
             document.getElementById('successMessage').classList.remove('active');
         }
         
-        // ========== INVIO FORM CON EMAILJS ==========
         async function submitForm(lang) {
             const form = document.getElementById(`form-${lang}`);
             const nome = document.getElementById(`nome-${lang}`).value.trim();
-            const email = document.getElementById(`email-${lang}`).value.trim();
             const partecipa = document.getElementById(`partecipazione-${lang}`).value;
             const canzone = document.getElementById(`canzone-${lang}`).value.trim();
             const allergie = document.getElementById(`allergie-${lang}`).value.trim() || (lang === 'it' ? 'Nessuna' : 'None');
             const messaggio = document.getElementById(`messaggio-${lang}`).value.trim();
             
-            // Validazione
-            if (!nome || !email || !partecipa) {
-                alert(lang === 'it' 
-                    ? 'Compila tutti i campi obbligatori!' 
-                    : 'Please fill in all required fields!');
+            if (!nome || !partecipa) {
+                alert(lang === 'it' ? 'Compila tutti i campi obbligatori!' : 'Please fill in all required fields!');
                 return;
             }
             
-            // Mostra stato di caricamento
             const submitBtn = document.getElementById(`submitBtn-${lang}`);
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${lang === 'it' ? 'Invio in corso...' : 'Sending...'}`;
             submitBtn.disabled = true;
             
-            // Prepara dati
             const firebaseData = {
                 name: nome,
-                email: email,
                 attendance: partecipa,
                 song: canzone,
                 dietary: allergie,
                 message: messaggio,
                 language: lang,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                date: new Date().toLocaleString('it-IT'),
-                confirmationSent: false
-            };
-            
-            // Scegli il template in base alla lingua
-            const templateId = EMAILJS_CONFIG.templates[lang];
-            
-            if (!templateId) {
-                alert(lang === 'it' 
-                    ? 'Errore: Template email non configurato. Contatta l\'amministratore.' 
-                    : 'Error: Email template not configured. Contact administrator.');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-            
-            // Parametri per EmailJS
-            // IMPORTANTE: I template devono usare questi parametri esatti
-            const emailParams = {
-                to_name: nome,
-                to_email: email,
-                from_name: "Flavio Carlo",
-                attendance_yes: partecipa === 'si', // Questo parametro controlla {{#if attendance_yes}} nel template
-                attendance: partecipa === 'si' 
-                    ? (lang === 'it' ? 'Sì, parteciperò' : 'Yes, I will attend') 
-                    : (lang === 'it' ? 'No, non potrò partecipare' : 'No, I cannot attend'),
-                song: canzone || (lang === 'it' ? 'Nessuna canzone suggerita' : 'No song suggested'),
-                dietary: allergie,
-                message: messaggio || (lang === 'it' ? 'Nessun messaggio' : 'No message'),
-                event_date: lang === 'it' ? '1 Aprile 2026' : 'April 1, 2026',
-                event_time: lang === 'it' ? '20:30' : '8:30 PM',
-                event_location: lang === 'it' ? 'Casina dei nonni, Oria (BR), Puglia' : 'Casina dei nonni, Oria (BR), Puglia',
-                map_link: 'https://maps.app.goo.gl/kewUkDAfJCAtCezHA',
-                reply_email: 'chimientiflaviocarlo@gmail.com' // MODIFICA QUESTA EMAIL CON LA TUA EMAIL REALE
+                date: new Date().toLocaleString('it-IT')
             };
             
             try {
-                // 1. Invia email di conferma
-                console.log(`Invio email con template: ${templateId} per lingua: ${lang}`);
-                const emailResult = await emailjs.send(
-                    EMAILJS_CONFIG.serviceId,
-                    templateId,
-                    emailParams
-                );
-                
-                console.log('✅ Email inviata:', emailResult.text);
-                
-                // 2. Salva su Firebase
-                firebaseData.confirmationSent = true;
-                firebaseData.emailId = emailResult.text;
-                
                 const docRef = await db.collection('risposte').add(firebaseData);
                 console.log('✅ Dati salvati su Firebase, ID:', docRef.id);
                 
-                // Successo completo
-                document.getElementById('successTitle').textContent = 
-                    lang === 'it' ? 'Grazie! 🙏' : 'Thank You! 🙏';
+                document.getElementById('successTitle').textContent = lang === 'it' ? 'Grazie! 🙏' : 'Thank You! 🙏';
                 
                 const successMsg = partecipa === 'si' 
-                    ? (lang === 'it' 
-                        ? 'Fantastico! Ci vediamo alla festa! 🎉 Controlla la tua email per i dettagli.' 
-                        : 'Awesome! See you at the party! 🎉 Check your email for details.')
-                    : (lang === 'it' 
-                        ? 'Ci dispiace non averti con noi 😢 Ti abbiamo inviato un\'email. Se cambi idea, faccelo sapere! 🙏' 
-                        : 'Sorry you can\'t make it 😢 We sent you an email. If you change your mind, let us know! 🙏');
+                    ? (lang === 'it' ? 'Fantastico! Ci vediamo alla festa! 🎉' : 'Awesome! See you at the party! 🎉')
+                    : (lang === 'it' ? 'Ci dispiace non averti con noi 😢 Se cambi idea, faccelo sapere! 🙏' : 'Sorry you can\'t make it 😢 If you change your mind, let us know! 🙏');
                 
                 document.getElementById('successText').textContent = successMsg;
-                
-                // Mostra info email
-                document.getElementById('emailInfo').innerHTML = 
-                    lang === 'it' 
-                    ? `<p><i class="fas fa-envelope"></i> Email inviata a: <strong>${email}</strong></p>`
-                    : `<p><i class="fas fa-envelope"></i> Email sent to: <strong>${email}</strong></p>`;
-                
                 document.getElementById('successMessage').classList.add('active');
                 form.reset();
                 
-                // Scrolla al messaggio di successo
-                document.getElementById('successMessage').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
+                document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
                 
-                // Aggiorna dashboard se admin loggato
                 if (document.getElementById('dashboard').classList.contains('active')) {
                     loadAdminDashboard();
                 }
                 
             } catch (error) {
-                console.error('❌ Errore:', error);
-                
-                // Salva comunque su Firebase (anche senza email)
-                firebaseData.confirmationSent = false;
-                firebaseData.error = error.text || error.message;
-                
-                try {
-                    await db.collection('risposte').add(firebaseData);
-                    
-                    const errorMsg = lang === 'it'
-                        ? 'Risposta registrata! ⚠️ Problema con l\'invio dell\'email di conferma. Ti contatteremo via email.'
-                        : 'Response recorded! ⚠️ Issue sending confirmation email. We will contact you by email.';
-                    
-                    alert(errorMsg);
-                    
-                    // Mostra comunque successo
-                    document.getElementById('successTitle').textContent = 
-                        lang === 'it' ? 'Risposta Salvata! 📝' : 'Response Saved! 📝';
-                    document.getElementById('successText').textContent = 
-                        lang === 'it'
-                        ? 'La tua risposta è stata registrata. Ti contatteremo presto via email.'
-                        : 'Your response has been recorded. We will contact you soon by email.';
-                    
-                    document.getElementById('successMessage').classList.add('active');
-                    form.reset();
-                    
-                } catch (firebaseError) {
-                    console.error('❌ Errore Firebase:', firebaseError);
-                    alert(lang === 'it' 
-                        ? 'Errore nell\'invio. Riprova più tardi.' 
-                        : 'Error sending. Please try again later.');
-                }
+                console.error('❌ Errore Firebase:', error);
+                alert(lang === 'it' ? 'Errore nell\'invio. Riprova più tardi.' : 'Error sending. Please try again later.');
             } finally {
-                // Ripristina il pulsante
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             }
         }
         
-        // ========== FUNZIONI ADMIN ==========
-        
-        // Mostra login admin
         document.getElementById('adminBtn').addEventListener('click', () => {
             document.getElementById('login').classList.add('active');
             document.getElementById('adminPassword').value = '';
@@ -1011,10 +884,9 @@
             document.getElementById('dashboard').classList.remove('active');
         });
         
-        // Login admin
         function adminLogin() {
             const password = document.getElementById('adminPassword').value;
-            const correctPassword = 'admin18'; // MODIFICA QUESTA PASSWORD CON UNA PIÙ SICURA!
+            const correctPassword = 'admin18';
             
             if (password === correctPassword) {
                 document.getElementById('login').classList.remove('active');
@@ -1030,13 +902,11 @@
             }
         }
         
-        // Chiudi login admin
         function closeAdmin() {
             document.getElementById('login').classList.remove('active');
             document.querySelector('.section').style.display = 'block';
         }
         
-        // Logout admin
         function adminLogout() {
             document.getElementById('dashboard').classList.remove('active');
             document.getElementById('adminBtn').style.display = 'flex';
@@ -1044,7 +914,6 @@
             document.getElementById('login').classList.remove('active');
         }
         
-        // Carica dati dashboard admin
         function loadAdminDashboard() {
             const guestList = document.getElementById('guestList');
             guestList.innerHTML = '<p style="text-align: center; color: var(--color-olive); padding: 30px;">Caricamento in corso...</p>';
@@ -1074,7 +943,6 @@
                         }
                         
                         const nome = data.name || 'N/A';
-                        const email = data.email || 'N/A';
                         const attendance = data.attendance === 'si' 
                             ? `<span style="color: var(--color-olive); font-weight: 600;">✅ Partecipa</span>` 
                             : `<span style="color: var(--color-terracotta); font-weight: 600;">❌ Non partecipa</span>`;
@@ -1083,26 +951,15 @@
                         const message = data.message ? `<br><em>"${data.message}"</em>` : '';
                         const date = data.date || 'Data non disponibile';
                         const language = data.language === 'it' ? '🇮🇹 IT' : '🇬🇧 EN';
-                        const emailSent = data.confirmationSent 
-                            ? '<span style="color: var(--color-olive);">✓ Email inviata</span>' 
-                            : '<span style="color: var(--color-terracotta);">✗ Email non inviata</span>';
                         
                         html += `
-                            <div style="
-                                padding: 20px; 
-                                margin-bottom: 15px; 
-                                background: ${data.attendance === 'si' ? 'rgba(138, 155, 110, 0.08)' : 'rgba(217, 125, 84, 0.08)'}; 
-                                border-radius: 12px; 
-                                border-left: 4px solid ${data.attendance === 'si' ? 'var(--color-olive)' : 'var(--color-terracotta)'};
-                            ">
+                            <div style="padding: 20px; margin-bottom: 15px; background: ${data.attendance === 'si' ? 'rgba(138, 155, 110, 0.08)' : 'rgba(217, 125, 84, 0.08)'}; border-radius: 12px; border-left: 4px solid ${data.attendance === 'si' ? 'var(--color-olive)' : 'var(--color-terracotta)'};">
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
                                     <div>
                                         <strong style="font-size: 1.1rem;">${nome}</strong>
-                                        <div style="font-size: 0.9rem; color: var(--color-dark);">${email}</div>
                                     </div>
                                     <div style="text-align: right;">
                                         <div>${language}</div>
-                                        <div style="font-size: 0.8rem;">${emailSent}</div>
                                     </div>
                                 </div>
                                 <div style="color: var(--color-dark); font-size: 0.95rem;">
@@ -1115,12 +972,10 @@
                         `;
                     });
                     
-                    // Aggiorna contatori
                     document.getElementById('totalCount').textContent = si + no;
                     document.getElementById('yesCount').textContent = si;
                     document.getElementById('noCount').textContent = no;
                     
-                    // Aggiorna lista
                     guestList.innerHTML = html;
                 })
                 .catch(err => {
