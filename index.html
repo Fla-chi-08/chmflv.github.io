@@ -8,7 +8,7 @@
     <style>
         :root {
             --color-terracotta: #D97D54;
-            --color-olive: #6B7A4F; /* Più scuro per migliore leggibilità */
+            --color-olive: #8A9B6E;
             --color-sand: #F5E9D9;
             --color-sky: #A7CECB;
             --color-dark: #3A2D28;
@@ -40,33 +40,33 @@
             z-index: -1;
         }
         
-        /* Contenitore per le emoji fluttuanti */
-        #floating-emojis {
+        /* Emoji flottanti */
+        .floating-emoji {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            font-size: 2rem;
+            z-index: 0;
+            opacity: 0.7;
+            user-select: none;
             pointer-events: none;
-            z-index: 1;
+            animation: floatAround 15s infinite linear;
         }
         
-        .emoji {
-            position: absolute;
-            font-size: 1.8rem;
-            opacity: 0.7;
-            pointer-events: none;
-            user-select: none;
-            z-index: 1;
-            transition: transform 0.2s ease;
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.7; }
+            25% { transform: translate(100px, 50px) rotate(90deg); opacity: 0.9; }
+            50% { transform: translate(50px, 100px) rotate(180deg); opacity: 0.7; }
+            75% { transform: translate(-50px, 50px) rotate(270deg); opacity: 0.9; }
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.7; }
         }
+        
+        .floating-emoji:nth-child(3n) { animation-duration: 20s; animation-delay: -5s; }
+        .floating-emoji:nth-child(5n) { animation-duration: 25s; animation-delay: -10s; }
         
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
-            z-index: 2;
         }
         
         /* Pulsante Admin */
@@ -95,14 +95,18 @@
             transform: translateY(-3px);
         }
         
-        /* Header Principale - CORNICE RINFORZATA */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Header Principale */
         .main-header {
             text-align: center;
             padding: 50px 40px;
             background: rgba(255, 252, 247, 0.95);
             border-radius: 24px;
             margin: 30px auto 50px;
-            border: 5px solid var(--color-dark); /* Cornice più spessa e scura */
+            border: 3px solid var(--color-sand);
             box-shadow: 
                 0 15px 35px rgba(58, 45, 40, 0.1),
                 inset 0 0 0 2px var(--color-light);
@@ -112,7 +116,6 @@
             overflow: hidden;
         }
         
-        /* Elemento decorativo angolo */
         .main-header::before {
             content: '✦';
             position: absolute;
@@ -149,7 +152,27 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
-        /* Rimosso il tagline */
+        .tagline {
+            font-size: 1.3rem;
+            color: var(--color-olive);
+            margin-bottom: 50px;
+            font-style: italic;
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+        
+        .tagline::before, .tagline::after {
+            content: '~';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-terracotta);
+            opacity: 0.6;
+        }
+        
+        .tagline::before { left: 0; }
+        .tagline::after { right: 0; }
         
         .info-cards {
             display: grid;
@@ -257,13 +280,13 @@
             letter-spacing: 0.5px;
         }
         
-        /* Sezione Form - CORNICE RINFORZATA */
+        /* Sezione Form */
         .section {
             background: rgba(255, 252, 247, 0.97);
             border-radius: 24px;
             padding: 60px 50px;
             margin: 40px auto;
-            border: 5px solid var(--color-dark); /* Cornice più spessa e scura */
+            border: 3px solid var(--color-sand);
             box-shadow: 
                 0 15px 35px rgba(58, 45, 40, 0.1),
                 inset 0 0 0 2px var(--color-light);
@@ -356,14 +379,8 @@
         }
         
         @keyframes gentleAppear {
-            from { 
-                opacity: 0; 
-                transform: translateY(25px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-group {
@@ -442,7 +459,7 @@
             animation: gentleAppear 0.6s ease;
         }
         
-        /* Sezioni Admin (nascoste inizialmente) */
+        /* Sezioni Admin */
         #login, #dashboard {
             display: none;
             max-width: 900px;
@@ -489,84 +506,27 @@
             border: 2px solid var(--color-sand);
         }
         
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 50px 20px 40px;
-            color: var(--color-dark);
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-top: 30px;
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .main-header, .section {
-                padding: 40px 25px;
-                margin: 20px auto;
-                border-width: 4px; /* Leggermente più sottile su mobile */
-            }
-            
-            h1 {
-                font-size: 2.4rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .info-cards {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .lang-selector {
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-            }
-            
-            .lang-btn {
-                width: 100%;
-                max-width: 300px;
-                padding: 16px 30px;
-            }
-            
-            #adminBtn {
-                top: 15px;
-                right: 15px;
-                padding: 8px 16px;
-                font-size: 0.9rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .btn-primary, .btn-submit {
-                padding: 18px 30px;
-                font-size: 1.1rem;
-                width: 100%;
-            }
-            
-            /* Riduci dimensione emoji su mobile */
-            .emoji {
-                font-size: 1.2rem;
-            }
+            .container { padding: 15px; }
+            .main-header, .section { padding: 40px 25px; margin: 20px auto; }
+            h1 { font-size: 2.4rem; }
+            .section-title { font-size: 2rem; }
+            .info-cards { grid-template-columns: 1fr; gap: 20px; }
+            .lang-selector { flex-direction: column; align-items: center; gap: 15px; }
+            .lang-btn { width: 100%; max-width: 300px; padding: 16px 30px; }
+            #adminBtn { top: 15px; right: 15px; padding: 8px 16px; font-size: 0.9rem; }
+            .stats-grid { grid-template-columns: 1fr; gap: 15px; }
+            .btn-primary, .btn-submit { padding: 18px 30px; font-size: 1.1rem; width: 100%; }
         }
     </style>
 </head>
 <body>
-    <!-- Emoji fluttuanti -->
-    <div id="floating-emojis"></div>
+    <!-- Container emoji flottanti -->
+    <div id="emoji-container"></div>
     
     <!-- Pulsante Admin -->
-    <button id="adminBtn">
+    <button id="adminBtn" class="hidden">
         <i class="fas fa-lock"></i> Admin
     </button>
     
@@ -574,155 +534,149 @@
         <!-- Header con informazioni principali -->
         <header class="main-header">
             <div class="title-icon">
-                <i class="fas fa-violin"></i> <!-- Icona cambiata in violino -->
+                <i class="fas fa-guitar"></i> 🎉🎂
             </div>
             <h1>Il <span class="highlight">18°</span> di <span class="highlight">Flavio Carlo</span></h1>
+            <p class="tagline">Una festa rustica sotto il cielo pugliese 🌞🎶🍷</p>
             
             <div class="info-cards">
                 <div class="card">
                     <i class="fas fa-calendar-day"></i>
-                    <h3>Quando</h3>
+                    <h3>Quando 📅⏰</h3>
                     <p>1 Aprile 2026</p>
                     <p class="location-note">Ore 20:30</p>
                 </div>
                 
                 <div class="card">
                     <i class="fas fa-map-marker-alt"></i>
-                    <h3>Dove</h3>
+                    <h3>Dove 📍🏡</h3>
                     <p>Casina dei nonni</p>
-                    <p class="location-note">Oria (BR), Puglia</p>
+                    <p class="location-note">Oria (BR), Puglia 🇮🇹</p>
                 </div>
             </div>
             
             <div class="map-btn-container">
                 <a href="https://maps.app.goo.gl/kewUkDAfJCAtCezHA" class="btn-primary" target="_blank">
                     <i class="fas fa-map-marked-alt"></i>
-                    Vedi sulla Mappa - Apri in Google Maps
+                    Vedi sulla Mappa 🗺️📍 - Apri in Google Maps
                 </a>
             </div>
         </header>
         
         <!-- Sezione principale: Conferma presenza -->
         <div class="section">
-            <h2 class="section-title">Conferma la tua presenza</h2>
-            <p class="section-subtitle">Scegli la lingua e compila il modulo per farci sapere se ci sarai</p>
+            <h2 class="section-title">Conferma la tua presenza 📝✅</h2>
+            <p class="section-subtitle">Scegli la lingua e compila il modulo per farci sapere se ci sarai 🎊👥</p>
             
             <!-- Selettore Lingua -->
             <div class="lang-selector">
-                <button id="langBtnIt" class="lang-btn active">
+                <button onclick="openForm('it')" class="lang-btn active" id="langBtnIt">
                     <i class="fas fa-flag"></i> Italiano
                 </button>
-                <button id="langBtnEn" class="lang-btn">
+                <button onclick="openForm('en')" class="lang-btn" id="langBtnEn">
                     <i class="fas fa-flag-usa"></i> English
                 </button>
             </div>
             
             <!-- Modulo Italiano -->
-            <form id="form-it" class="form active" action="https://formspree.io/f/xreazzjo" method="POST">
-                <input type="hidden" name="_language" value="it">
-                <input type="hidden" name="_subject" value="Conferma 18° Compleanno Flavio Carlo">
-                <input type="hidden" name="_replyto" id="replyToField-it">
-                
+            <form id="form-it" class="form active">
                 <div class="form-group">
                     <label for="nome-it" class="required">Nome e Cognome</label>
                     <input type="text" id="nome-it" name="nome" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="email-it" class="required">Email</label>
+                    <label for="email-it" class="required">Email 📧</label>
                     <input type="email" id="email-it" name="email" required>
-                    <small style="color: var(--color-olive); display: block; margin-top: 8px;">Riceverai una conferma via email con i dettagli</small>
+                    <small style="color: var(--color-olive); display: block; margin-top: 8px;">Riceverai una email di conferma con i dettagli</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="partecipazione-it" class="required">Parteciperai?</label>
+                    <label for="partecipazione-it" class="required">Parteciperai? 🤔</label>
                     <select id="partecipazione-it" name="partecipazione" required>
                         <option value="">Scegli...</option>
-                        <option value="si">Sì, ci sarò! 🎉</option>
-                        <option value="no">No, purtroppo non posso 😢</option>
+                        <option value="si">Sì, ci sarò! 🎉🥳</option>
+                        <option value="no">No, purtroppo non posso 😢🙏</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label for="canzone-it">Una canzone che vorresti sentire</label>
+                    <label for="canzone-it">Una canzone che vorresti sentire 🎵🎶</label>
                     <input type="text" id="canzone-it" name="canzone" placeholder="Es: 'Volare' - Domenico Modugno">
                     <small style="color: var(--color-olive); display: block; margin-top: 8px;">Suggerisci un brano per la playlist!</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="allergie-it">Allergie o richieste alimentari</label>
+                    <label for="allergie-it">Allergie o richieste alimentari 🍝🚫</label>
                     <textarea id="allergie-it" name="allergie" rows="2" placeholder="Nessuna / Vegetariano / Intolleranze..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="messaggio-it">Un messaggio per Flavio</label>
-                    <textarea id="messaggio-it" name="messaggio" rows="3" placeholder="Scrivi qui il tuo augurio... (opzionale)"></textarea>
+                    <label for="messaggio-it">Un messaggio per Flavio 💌✨</label>
+                    <textarea id="messaggio-it" name="messaggio" rows="3" placeholder="Scrivi qui il tuo augurio..."></textarea>
                 </div>
                 
                 <button type="submit" class="btn-submit" id="submitBtn-it">
-                    <i class="fas fa-paper-plane"></i> Invia la tua risposta
+                    <i class="fas fa-paper-plane"></i> Invia la tua risposta 📨✅
                 </button>
             </form>
             
             <!-- Modulo Inglese -->
-            <form id="form-en" class="form" action="https://formspree.io/f/xreazzjo" method="POST">
-                <input type="hidden" name="_language" value="en">
-                <input type="hidden" name="_subject" value="RSVP for Flavio Carlo's 18th Birthday">
-                <input type="hidden" name="_replyto" id="replyToField-en">
-                
+            <form id="form-en" class="form">
                 <div class="form-group">
                     <label for="nome-en" class="required">Full Name</label>
                     <input type="text" id="nome-en" name="nome" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="email-en" class="required">Email</label>
+                    <label for="email-en" class="required">Email 📧</label>
                     <input type="email" id="email-en" name="email" required>
                     <small style="color: var(--color-olive); display: block; margin-top: 8px;">You will receive a confirmation email with details</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="partecipazione-en" class="required">Will you attend?</label>
+                    <label for="partecipazione-en" class="required">Will you attend? 🤔</label>
                     <select id="partecipazione-en" name="partecipazione" required>
                         <option value="">Choose...</option>
-                        <option value="si">Yes, I'll be there! 🎉</option>
-                        <option value="no">No, I can't make it 😢</option>
+                        <option value="si">Yes, I'll be there! 🎉🥳</option>
+                        <option value="no">No, I can't make it 😢🙏</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label for="canzone-en">A song you'd like to hear</label>
+                    <label for="canzone-en">A song you'd like to hear 🎵🎶</label>
                     <input type="text" id="canzone-en" name="canzone" placeholder="E.g.: 'Volare' - Domenico Modugno">
                     <small style="color: var(--color-olive); display: block; margin-top: 8px;">Suggest a track for the playlist!</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="allergie-en">Food allergies or dietary requests</label>
+                    <label for="allergie-en">Food allergies or dietary requests 🍝🚫</label>
                     <textarea id="allergie-en" name="allergie" rows="2" placeholder="None / Vegetarian / Intolerances..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="messaggio-en">A message for Flavio</label>
-                    <textarea id="messaggio-en" name="messaggio" rows="3" placeholder="Write your message here... (optional)"></textarea>
+                    <label for="messaggio-en">A message for Flavio 💌✨</label>
+                    <textarea id="messaggio-en" name="messaggio" rows="3" placeholder="Write your message here..."></textarea>
                 </div>
                 
                 <button type="submit" class="btn-submit" id="submitBtn-en">
-                    <i class="fas fa-paper-plane"></i> Send your response
+                    <i class="fas fa-paper-plane"></i> Send your response 📨✅
                 </button>
             </form>
             
             <!-- Messaggio di Successo -->
             <div id="successMessage" class="success-message">
                 <i class="fas fa-check-circle" style="font-size: 3.5rem; color: var(--color-sky); margin-bottom: 25px;"></i>
-                <h3 id="successTitle" style="font-size: 2rem; margin-bottom: 15px;">Grazie!</h3>
-                <p id="successText" style="font-size: 1.2rem; line-height: 1.6;">La tua risposta è stata inviata con successo. Riceverai una email di conferma a breve con tutti i dettagli dell'evento.</p>
+                <h3 id="successTitle" style="font-size: 2rem; margin-bottom: 15px;">Grazie! 🙏</h3>
+                <p id="successText" style="font-size: 1.2rem; line-height: 1.6;">La tua risposta è stata inviata con successo! Controlla la tua email per la conferma 📧✅</p>
+                <div id="emailInfo" style="margin-top: 20px; font-size: 0.95rem; color: var(--color-olive);"></div>
             </div>
         </div>
         
-        <!-- Login Admin (nascosto) -->
+        <!-- Login Admin -->
         <div id="login" class="section">
             <h2 class="section-title" style="color: var(--color-terracotta);">
-                <i class="fas fa-lock"></i> Accesso Admin
+                <i class="fas fa-lock"></i> Accesso Admin 🔐
             </h2>
             <p class="section-subtitle" style="margin-bottom: 40px;">Inserisci la password per accedere alla dashboard</p>
             
@@ -732,22 +686,22 @@
             </div>
             
             <div style="display: flex; justify-content: center; gap: 20px;">
-                <button id="adminLoginBtn" class="btn-submit" style="background: linear-gradient(135deg, var(--color-terracotta), var(--color-olive));">
+                <button onclick="adminLogin()" class="btn-submit" style="background: linear-gradient(135deg, var(--color-terracotta), var(--color-olive));">
                     <i class="fas fa-sign-in-alt"></i> Accedi
                 </button>
-                <button id="adminCancelBtn" class="btn-submit" style="background: transparent; color: var(--color-dark); border: 2px solid var(--color-sand);">
+                <button onclick="closeAdmin()" class="btn-submit" style="background: transparent; color: var(--color-dark); border: 2px solid var(--color-sand);">
                     <i class="fas fa-times"></i> Annulla
                 </button>
             </div>
         </div>
         
-        <!-- Dashboard Admin (nascosta) -->
+        <!-- Dashboard Admin -->
         <div id="dashboard" class="section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
                 <h2 class="section-title" style="margin: 0; color: var(--color-terracotta);">
-                    <i class="fas fa-chart-bar"></i> Dashboard Admin
+                    <i class="fas fa-chart-bar"></i> Dashboard Admin 📊
                 </h2>
-                <button id="adminLogoutBtn" class="btn-submit" style="padding: 12px 25px; font-size: 1rem;">
+                <button onclick="adminLogout()" class="btn-submit" style="padding: 12px 25px; font-size: 1rem;">
                     <i class="fas fa-sign-out-alt"></i> Esci
                 </button>
             </div>
@@ -759,36 +713,39 @@
                 </div>
                 <div class="stat-card">
                     <span class="stat-number" id="yesCount">0</span>
-                    <span style="color: var(--color-olive); font-weight: 600;">Partecipano</span>
+                    <span style="color: var(--color-olive); font-weight: 600;">Partecipano ✅</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-number" id="noCount">0</span>
-                    <span style="color: var(--color-olive); font-weight: 600;">Non Partecipano</span>
+                    <span style="color: var(--color-olive); font-weight: 600;">Non Partecipano ❌</span>
                 </div>
             </div>
             
             <h3 style="color: var(--color-dark); margin: 40px 0 20px;">
-                <i class="fas fa-list"></i> Elenco Partecipanti
+                <i class="fas fa-list"></i> Elenco Partecipanti 📋
             </h3>
             <div id="guestList">
                 <p style="text-align: center; color: var(--color-olive); padding: 40px;">Nessuna risposta ancora...</p>
             </div>
         </div>
         
-        <footer>
-            <p>Creato con ❤️ per il 18° compleanno di Flavio Carlo</p>
-            <p style="margin-top: 15px; font-size: 0.95rem; color: var(--color-olive);">
-                <i class="fas fa-leaf"></i> Una celebrazione nella nostra amata Puglia
+        <footer style="text-align: center; padding: 40px 20px; color: var(--color-olive);">
+            <p>Creato con ❤️ per il 18° compleanno di Flavio Carlo 🎂✨</p>
+            <p style="margin-top: 15px; font-size: 0.95rem;">
+                <i class="fas fa-leaf"></i> Una celebrazione nella nostra amata Puglia 🇮🇹🌞
             </p>
         </footer>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase, EmailJS SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <script>
-        // ========== FIREBASE CONFIG ==========
+        // ========== CONFIGURAZIONI ==========
+        
+        // 1. FIREBASE (la tua configurazione)
         const firebaseConfig = {
             apiKey: "AIzaSyD52wn88EGkEHRssIfpRbW35Og8-Y6dqY8",
             authDomain: "diciottesimo-24e19.firebaseapp.com",
@@ -805,207 +762,259 @@
         }
         const db = firebase.firestore();
         
+        // 2. EMAILJS - CON I TUOI CODICI
+        emailjs.init("iYy4aKNY76_cixPcW");
+        
+        // Configurazione EmailJS
+        const EMAILJS_CONFIG = {
+            serviceId: "service_pboa2nb",
+            templates: {
+                it: "template_h3otx4o", // Template italiano (gestisce sia Sì che No)
+                en: "template_w8kuh5j"  // Template inglese (gestisce sia Sì che No)
+            }
+        };
+        
         // ========== VARIABILI GLOBALI ==========
         let currentLang = 'it';
-        let emojis = [];
-        let mouseX = 0;
-        let mouseY = 0;
+        
+        // ========== EMOJI FLOTTANTI ==========
+        function createFloatingEmojis() {
+            const container = document.getElementById('emoji-container');
+            const emojis = ['🎉', '🎂', '🎈', '🥳', '🎁', '✨', '🌟', '🎊', '🍕', '🍷', '🎵', '💃', '🕺', '😊', '🥂', '🎶', '🇮🇹', '🍝', '🎸', '⭐'];
+            
+            for (let i = 0; i < 15; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'floating-emoji';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.top = Math.random() * 100 + 'vh';
+                emoji.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+                emoji.style.opacity = Math.random() * 0.5 + 0.4;
+                emoji.style.animationDelay = Math.random() * 5 + 's';
+                
+                container.appendChild(emoji);
+            }
+        }
         
         // ========== FUNZIONI PRINCIPALI ==========
         
-        // Inizializzazione
-        document.addEventListener('DOMContentLoaded', () => {
-            // Verifica connessione Firebase
+        // Mostra pulsante admin e crea emoji
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('adminBtn').classList.remove('hidden');
+            }, 1000);
+            
+            createFloatingEmojis();
+            
+            // Verifica Firebase
             db.collection('risposte').limit(1).get()
                 .then(() => console.log('✅ Firebase connesso'))
                 .catch(err => console.warn('⚠️ Firebase:', err.message));
             
-            // Inizializza gli event listener per i pulsanti
-            initEventListeners();
-            
-            // Crea le emoji fluttuanti
-            createFloatingEmojis(15);
-            
-            // Avvia l'animazione delle emoji
-            animateEmojis();
-        });
-        
-        // Inizializza tutti gli event listener
-        function initEventListeners() {
-            // Pulsanti lingua
-            document.getElementById('langBtnIt').addEventListener('click', () => openForm('it'));
-            document.getElementById('langBtnEn').addEventListener('click', () => openForm('en'));
-            
-            // Pulsante admin
-            document.getElementById('adminBtn').addEventListener('click', showAdminLogin);
-            
-            // Pulsanti admin
-            document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
-            document.getElementById('adminCancelBtn').addEventListener('click', closeAdmin);
-            document.getElementById('adminLogoutBtn').addEventListener('click', adminLogout);
-            
-            // Form submission
+            // Setup form submit handlers
             document.getElementById('form-it').addEventListener('submit', (e) => {
                 e.preventDefault();
-                submitForm(e.target, 'it');
-            });
-            document.getElementById('form-en').addEventListener('submit', (e) => {
-                e.preventDefault();
-                submitForm(e.target, 'en');
+                submitForm('it');
             });
             
-            // Traccia la posizione del mouse per l'effetto sulle emoji
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+            document.getElementById('form-en').addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitForm('en');
             });
-        }
+        });
         
         // Apre il modulo nella lingua selezionata
         function openForm(lang) {
             currentLang = lang;
             
-            // Aggiorna i pulsanti della lingua
             document.getElementById('langBtnIt').classList.toggle('active', lang === 'it');
             document.getElementById('langBtnEn').classList.toggle('active', lang === 'en');
             
-            // Nasconde tutti i form e mostra quello corretto
             document.getElementById('form-it').classList.remove('active');
             document.getElementById('form-en').classList.remove('active');
             document.getElementById(`form-${lang}`).classList.add('active');
             
-            // Nascondi messaggio di successo se visibile
             document.getElementById('successMessage').classList.remove('active');
         }
         
-        // Gestisce l'invio del form
-        function submitForm(form, lang) {
-            const nome = form.querySelector(`#nome-${lang}`).value.trim();
-            const email = form.querySelector(`#email-${lang}`).value.trim();
-            const partecipa = form.querySelector(`#partecipazione-${lang}`).value;
-            const canzone = form.querySelector(`#canzone-${lang}`).value.trim();
-            const allergie = form.querySelector(`#allergie-${lang}`).value.trim();
-            const messaggio = form.querySelector(`#messaggio-${lang}`).value.trim();
+        // ========== INVIO FORM CON EMAILJS ==========
+        async function submitForm(lang) {
+            const form = document.getElementById(`form-${lang}`);
+            const nome = document.getElementById(`nome-${lang}`).value.trim();
+            const email = document.getElementById(`email-${lang}`).value.trim();
+            const partecipa = document.getElementById(`partecipazione-${lang}`).value;
+            const canzone = document.getElementById(`canzone-${lang}`).value.trim();
+            const allergie = document.getElementById(`allergie-${lang}`).value.trim() || (lang === 'it' ? 'Nessuna' : 'None');
+            const messaggio = document.getElementById(`messaggio-${lang}`).value.trim();
             
             // Validazione
             if (!nome || !email || !partecipa) {
                 alert(lang === 'it' 
                     ? 'Compila tutti i campi obbligatori!' 
                     : 'Please fill in all required fields!');
-                return false;
+                return;
             }
             
-            // Imposta il campo _replyto per Formspree
-            form.querySelector(`#replyToField-${lang}`).value = email;
-            
-            // Salva i dati su Firebase
-            const firebaseData = {
-                nome: nome,
-                email: email,
-                partecipa: partecipa,
-                canzone: canzone || '',
-                allergie: allergie || (lang === 'it' ? 'Nessuna' : 'None'),
-                messaggio: messaggio || '',
-                lingua: lang,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                dataInvio: new Date().toLocaleString('it-IT'),
-                emailInviata: false
-            };
-            
             // Mostra stato di caricamento
-            const submitBtn = form.querySelector('.btn-submit');
+            const submitBtn = document.getElementById(`submitBtn-${lang}`);
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${lang === 'it' ? 'Invio in corso...' : 'Sending...'}`;
             submitBtn.disabled = true;
             
-            // 1. Salva su Firebase
-            db.collection('risposte').add(firebaseData)
-                .then((docRef) => {
-                    console.log('✅ Dati salvati su Firebase, ID:', docRef.id);
+            // Prepara dati
+            const firebaseData = {
+                name: nome,
+                email: email,
+                attendance: partecipa,
+                song: canzone,
+                dietary: allergie,
+                message: messaggio,
+                language: lang,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                date: new Date().toLocaleString('it-IT'),
+                confirmationSent: false
+            };
+            
+            // Scegli il template in base alla lingua
+            const templateId = EMAILJS_CONFIG.templates[lang];
+            
+            if (!templateId) {
+                alert(lang === 'it' 
+                    ? 'Errore: Template email non configurato. Contatta l\'amministratore.' 
+                    : 'Error: Email template not configured. Contact administrator.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            // Parametri per EmailJS
+            // IMPORTANTE: I template devono usare questi parametri esatti
+            const emailParams = {
+                to_name: nome,
+                to_email: email,
+                from_name: "Flavio Carlo",
+                attendance_yes: partecipa === 'si', // Questo parametro controlla {{#if attendance_yes}} nel template
+                attendance: partecipa === 'si' 
+                    ? (lang === 'it' ? 'Sì, parteciperò' : 'Yes, I will attend') 
+                    : (lang === 'it' ? 'No, non potrò partecipare' : 'No, I cannot attend'),
+                song: canzone || (lang === 'it' ? 'Nessuna canzone suggerita' : 'No song suggested'),
+                dietary: allergie,
+                message: messaggio || (lang === 'it' ? 'Nessun messaggio' : 'No message'),
+                event_date: lang === 'it' ? '1 Aprile 2026' : 'April 1, 2026',
+                event_time: lang === 'it' ? '20:30' : '8:30 PM',
+                event_location: lang === 'it' ? 'Casina dei nonni, Oria (BR), Puglia' : 'Casina dei nonni, Oria (BR), Puglia',
+                map_link: 'https://maps.app.goo.gl/kewUkDAfJCAtCezHA',
+                reply_email: 'flavio.carlo@example.com' // MODIFICA QUESTA EMAIL CON LA TUA EMAIL REALE
+            };
+            
+            try {
+                // 1. Invia email di conferma
+                console.log(`Invio email con template: ${templateId} per lingua: ${lang}`);
+                const emailResult = await emailjs.send(
+                    EMAILJS_CONFIG.serviceId,
+                    templateId,
+                    emailParams
+                );
+                
+                console.log('✅ Email inviata:', emailResult.text);
+                
+                // 2. Salva su Firebase
+                firebaseData.confirmationSent = true;
+                firebaseData.emailId = emailResult.text;
+                
+                const docRef = await db.collection('risposte').add(firebaseData);
+                console.log('✅ Dati salvati su Firebase, ID:', docRef.id);
+                
+                // Successo completo
+                document.getElementById('successTitle').textContent = 
+                    lang === 'it' ? 'Grazie! 🙏' : 'Thank You! 🙏';
+                
+                const successMsg = partecipa === 'si' 
+                    ? (lang === 'it' 
+                        ? 'Fantastico! Ci vediamo alla festa! 🎉 Controlla la tua email per i dettagli.' 
+                        : 'Awesome! See you at the party! 🎉 Check your email for details.')
+                    : (lang === 'it' 
+                        ? 'Ci dispiace non averti con noi 😢 Ti abbiamo inviato un\'email. Se cambi idea, faccelo sapere! 🙏' 
+                        : 'Sorry you can\'t make it 😢 We sent you an email. If you change your mind, let us know! 🙏');
+                
+                document.getElementById('successText').textContent = successMsg;
+                
+                // Mostra info email
+                document.getElementById('emailInfo').innerHTML = 
+                    lang === 'it' 
+                    ? `<p><i class="fas fa-envelope"></i> Email inviata a: <strong>${email}</strong></p>`
+                    : `<p><i class="fas fa-envelope"></i> Email sent to: <strong>${email}</strong></p>`;
+                
+                document.getElementById('successMessage').classList.add('active');
+                form.reset();
+                
+                // Scrolla al messaggio di successo
+                document.getElementById('successMessage').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+                
+                // Aggiorna dashboard se admin loggato
+                if (document.getElementById('dashboard').classList.contains('active')) {
+                    loadAdminDashboard();
+                }
+                
+            } catch (error) {
+                console.error('❌ Errore:', error);
+                
+                // Salva comunque su Firebase (anche senza email)
+                firebaseData.confirmationSent = false;
+                firebaseData.error = error.text || error.message;
+                
+                try {
+                    await db.collection('risposte').add(firebaseData);
                     
-                    // 2. Invia a Formspree (che invierà le email)
-                    fetch(form.action, {
-                        method: 'POST',
-                        body: new FormData(form),
-                        headers: { 'Accept': 'application/json' }
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            // Successo
-                            document.getElementById('successTitle').textContent = 
-                                lang === 'it' ? 'Grazie!' : 'Thank You!';
-                            document.getElementById('successText').textContent = 
-                                lang === 'it' 
-                                ? 'La tua risposta è stata inviata con successo. Riceverai una email di conferma a breve con tutti i dettagli dell\'evento.' 
-                                : 'Your response has been sent successfully. You will receive a confirmation email shortly with all the event details.';
-                            
-                            document.getElementById('successMessage').classList.add('active');
-                            form.reset();
-                            
-                            // Scrolla al messaggio di successo
-                            document.getElementById('successMessage').scrollIntoView({ 
-                                behavior: 'smooth' 
-                            });
-                            
-                            // Se l'admin è loggato, aggiorna la dashboard
-                            if (document.getElementById('dashboard').classList.contains('active')) {
-                                loadAdminDashboard();
-                            }
-                        } else {
-                            throw new Error('Formspree error');
-                        }
-                    })
-                    .catch(err => {
-                        console.error('❌ Errore Formspree:', err);
-                        // Mostra comunque successo per Firebase
-                        document.getElementById('successTitle').textContent = 
-                            lang === 'it' ? 'Grazie!' : 'Thank You!';
-                        document.getElementById('successText').textContent = 
-                            lang === 'it' 
-                            ? 'La tua risposta è stata registrata. Se non ricevi l\'email di conferma entro qualche ora, contattaci.' 
-                            : 'Your response has been recorded. If you don\'t receive a confirmation email within a few hours, please contact us.';
-                        
-                        document.getElementById('successMessage').classList.add('active');
-                        form.reset();
-                    })
-                    .finally(() => {
-                        // Ripristina il pulsante
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    });
-                })
-                .catch(err => {
-                    // Errore Firebase
-                    console.error('❌ Errore Firestore:', err);
+                    const errorMsg = lang === 'it'
+                        ? 'Risposta registrata! ⚠️ Problema con l\'invio dell\'email di conferma. Ti contatteremo via email.'
+                        : 'Response recorded! ⚠️ Issue sending confirmation email. We will contact you by email.';
+                    
+                    alert(errorMsg);
+                    
+                    // Mostra comunque successo
+                    document.getElementById('successTitle').textContent = 
+                        lang === 'it' ? 'Risposta Salvata! 📝' : 'Response Saved! 📝';
+                    document.getElementById('successText').textContent = 
+                        lang === 'it'
+                        ? 'La tua risposta è stata registrata. Ti contatteremo presto via email.'
+                        : 'Your response has been recorded. We will contact you soon by email.';
+                    
+                    document.getElementById('successMessage').classList.add('active');
+                    form.reset();
+                    
+                } catch (firebaseError) {
+                    console.error('❌ Errore Firebase:', firebaseError);
                     alert(lang === 'it' 
                         ? 'Errore nell\'invio. Riprova più tardi.' 
                         : 'Error sending. Please try again later.');
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                });
-            
-            return false;
+                }
+            } finally {
+                // Ripristina il pulsante
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         }
         
         // ========== FUNZIONI ADMIN ==========
         
         // Mostra login admin
-        function showAdminLogin() {
+        document.getElementById('adminBtn').addEventListener('click', () => {
             document.getElementById('login').classList.add('active');
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminPassword').focus();
             
-            // Nascondi altre sezioni
             document.querySelector('.section').style.display = 'none';
             document.getElementById('dashboard').classList.remove('active');
-        }
+        });
         
         // Login admin
         function adminLogin() {
             const password = document.getElementById('adminPassword').value;
-            
-            // MODIFICA QUESTA PASSWORD CON UNA TUA!
-            const correctPassword = 'admin18'; // CAMBIA QUESTA PASSWORD!
+            const correctPassword = 'admin18'; // MODIFICA QUESTA PASSWORD CON UNA PIÙ SICURA!
             
             if (password === correctPassword) {
                 document.getElementById('login').classList.remove('active');
@@ -1058,41 +1067,49 @@
                     snapshot.forEach(doc => {
                         const data = doc.data();
                         
-                        if (data.partecipa === 'si') {
+                        if (data.attendance === 'si') {
                             si++;
                         } else {
                             no++;
                         }
                         
-                        const nome = data.nome || 'N/A';
+                        const nome = data.name || 'N/A';
                         const email = data.email || 'N/A';
-                        const partecipa = data.partecipa === 'si' 
+                        const attendance = data.attendance === 'si' 
                             ? `<span style="color: var(--color-olive); font-weight: 600;">✅ Partecipa</span>` 
                             : `<span style="color: var(--color-terracotta); font-weight: 600;">❌ Non partecipa</span>`;
-                        const canzone = data.canzone ? `<br><strong>Canzone:</strong> ${data.canzone}` : '';
-                        const allergie = data.allergie ? `<br><strong>Allergie:</strong> ${data.allergie}` : '';
-                        const messaggio = data.messaggio ? `<br><em>"${data.messaggio}"</em>` : '';
-                        const date = data.dataInvio || 'Data non disponibile';
-                        const lingua = data.lingua === 'it' ? '🇮🇹' : '🇬🇧';
+                        const song = data.song ? `<br><strong>🎵 Canzone:</strong> ${data.song}` : '';
+                        const dietary = data.dietary ? `<br><strong>🍝 Note:</strong> ${data.dietary}` : '';
+                        const message = data.message ? `<br><em>"${data.message}"</em>` : '';
+                        const date = data.date || 'Data non disponibile';
+                        const language = data.language === 'it' ? '🇮🇹 IT' : '🇬🇧 EN';
+                        const emailSent = data.confirmationSent 
+                            ? '<span style="color: var(--color-olive);">✓ Email inviata</span>' 
+                            : '<span style="color: var(--color-terracotta);">✗ Email non inviata</span>';
                         
                         html += `
                             <div style="
                                 padding: 20px; 
                                 margin-bottom: 15px; 
-                                background: ${data.partecipa === 'si' ? 'rgba(138, 155, 110, 0.08)' : 'rgba(217, 125, 84, 0.08)'}; 
+                                background: ${data.attendance === 'si' ? 'rgba(138, 155, 110, 0.08)' : 'rgba(217, 125, 84, 0.08)'}; 
                                 border-radius: 12px; 
-                                border-left: 4px solid ${data.partecipa === 'si' ? 'var(--color-olive)' : 'var(--color-terracotta)'};
+                                border-left: 4px solid ${data.attendance === 'si' ? 'var(--color-olive)' : 'var(--color-terracotta)'};
                             ">
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                                    <strong style="font-size: 1.1rem;">${nome}</strong>
-                                    <span>${lingua}</span>
+                                    <div>
+                                        <strong style="font-size: 1.1rem;">${nome}</strong>
+                                        <div style="font-size: 0.9rem; color: var(--color-dark);">${email}</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div>${language}</div>
+                                        <div style="font-size: 0.8rem;">${emailSent}</div>
+                                    </div>
                                 </div>
                                 <div style="color: var(--color-dark); font-size: 0.95rem;">
-                                    <div>${email}</div>
-                                    <div style="margin: 8px 0;">${partecipa} • ${date}</div>
-                                    ${canzone}
-                                    ${allergie}
-                                    ${messaggio}
+                                    <div style="margin: 8px 0;">${attendance} • ${date}</div>
+                                    ${song}
+                                    ${dietary}
+                                    ${message}
                                 </div>
                             </div>
                         `;
@@ -1110,97 +1127,6 @@
                     console.error('Errore caricamento dati:', err);
                     guestList.innerHTML = '<p style="text-align: center; color: var(--color-terracotta); padding: 40px;">Errore nel caricamento dei dati.</p>';
                 });
-        }
-        
-        // ========== EMOJI FLUTTUANTI ==========
-        
-        // Crea le emoji fluttuanti
-        function createFloatingEmojis(count) {
-            const container = document.getElementById('floating-emojis');
-            const emojiList = ['🎻', '🍷', '🍝', '🎪', '🎭', '🍕', '🍋', '🌞', '🎂', '🎉', '🎊', '🎈', '🥂', '🍾', '🍴'];
-            
-            for (let i = 0; i < count; i++) {
-                const emoji = document.createElement('div');
-                emoji.className = 'emoji';
-                emoji.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
-                
-                // Posizione casuale
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                
-                // Dimensione casuale
-                const size = 1 + Math.random() * 1.5; // tra 1 e 2.5rem
-                
-                // Animazione CSS
-                const duration = 20 + Math.random() * 30; // tra 20 e 50 secondi
-                const delay = Math.random() * 5;
-                
-                emoji.style.left = `${posX}%`;
-                emoji.style.top = `${posY}%`;
-                emoji.style.fontSize = `${size}rem`;
-                emoji.style.animation = `float ${duration}s ease-in-out ${delay}s infinite alternate`;
-                
-                // Aggiungi stili per l'animazione float
-                const style = document.createElement('style');
-                if (!document.querySelector('#float-animation')) {
-                    style.id = 'float-animation';
-                    style.textContent = `
-                        @keyframes float {
-                            0% { transform: translate(0, 0) rotate(0deg); }
-                            25% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(5deg); }
-                            50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(0deg); }
-                            75% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(-5deg); }
-                            100% { transform: translate(0, 0) rotate(0deg); }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-                
-                container.appendChild(emoji);
-                emojis.push({
-                    element: emoji,
-                    x: posX,
-                    y: posY,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    size: size
-                });
-            }
-        }
-        
-        // Anima le emoji con interazione mouse
-        function animateEmojis() {
-            const repulsionRadius = 100; // pixel
-            const repulsionForce = 0.05;
-            
-            emojis.forEach(emoji => {
-                const rect = emoji.element.getBoundingClientRect();
-                const emojiCenterX = rect.left + rect.width / 2;
-                const emojiCenterY = rect.top + rect.height / 2;
-                
-                // Calcola distanza dal mouse
-                const dx = mouseX - emojiCenterX;
-                const dy = mouseY - emojiCenterY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                // Se il mouse è abbastanza vicino, respingi l'emoji
-                if (distance < repulsionRadius) {
-                    const force = (repulsionRadius - distance) / repulsionRadius;
-                    const angle = Math.atan2(dy, dx);
-                    
-                    // Calcola lo spostamento
-                    const moveX = -Math.cos(angle) * force * repulsionForce * 100;
-                    const moveY = -Math.sin(angle) * force * repulsionForce * 100;
-                    
-                    // Applica la trasformazione
-                    emoji.element.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                } else {
-                    // Ritorna lentamente alla posizione originale
-                    emoji.element.style.transform = 'translate(0, 0)';
-                }
-            });
-            
-            requestAnimationFrame(animateEmojis);
         }
     </script>
 </body>
