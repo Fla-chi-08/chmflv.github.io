@@ -8,7 +8,7 @@
     <style>
         :root {
             --color-terracotta: #D97D54;
-            --color-olive: #8A9B6E;
+            --color-olive: #6B7A4F; /* Più scuro per migliore leggibilità */
             --color-sand: #F5E9D9;
             --color-sky: #A7CECB;
             --color-dark: #3A2D28;
@@ -40,11 +40,33 @@
             z-index: -1;
         }
         
+        /* Contenitore per le emoji fluttuanti */
+        #floating-emojis {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .emoji {
+            position: absolute;
+            font-size: 1.8rem;
+            opacity: 0.7;
+            pointer-events: none;
+            user-select: none;
+            z-index: 1;
+            transition: transform 0.2s ease;
+        }
+        
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
+            z-index: 2;
         }
         
         /* Pulsante Admin */
@@ -73,14 +95,14 @@
             transform: translateY(-3px);
         }
         
-        /* Header Principale - CON CORNICE */
+        /* Header Principale - CORNICE RINFORZATA */
         .main-header {
             text-align: center;
             padding: 50px 40px;
             background: rgba(255, 252, 247, 0.95);
             border-radius: 24px;
             margin: 30px auto 50px;
-            border: 3px solid var(--color-sand);
+            border: 5px solid var(--color-dark); /* Cornice più spessa e scura */
             box-shadow: 
                 0 15px 35px rgba(58, 45, 40, 0.1),
                 inset 0 0 0 2px var(--color-light);
@@ -127,27 +149,7 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
-        .tagline {
-            font-size: 1.3rem;
-            color: var(--color-olive);
-            margin-bottom: 50px;
-            font-style: italic;
-            position: relative;
-            display: inline-block;
-            padding: 0 20px;
-        }
-        
-        .tagline::before, .tagline::after {
-            content: '~';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--color-terracotta);
-            opacity: 0.6;
-        }
-        
-        .tagline::before { left: 0; }
-        .tagline::after { right: 0; }
+        /* Rimosso il tagline */
         
         .info-cards {
             display: grid;
@@ -255,13 +257,13 @@
             letter-spacing: 0.5px;
         }
         
-        /* Sezione Form - CON CORNICE */
+        /* Sezione Form - CORNICE RINFORZATA */
         .section {
             background: rgba(255, 252, 247, 0.97);
             border-radius: 24px;
             padding: 60px 50px;
             margin: 40px auto;
-            border: 3px solid var(--color-sand);
+            border: 5px solid var(--color-dark); /* Cornice più spessa e scura */
             box-shadow: 
                 0 15px 35px rgba(58, 45, 40, 0.1),
                 inset 0 0 0 2px var(--color-light);
@@ -506,6 +508,7 @@
             .main-header, .section {
                 padding: 40px 25px;
                 margin: 20px auto;
+                border-width: 4px; /* Leggermente più sottile su mobile */
             }
             
             h1 {
@@ -550,12 +553,20 @@
                 font-size: 1.1rem;
                 width: 100%;
             }
+            
+            /* Riduci dimensione emoji su mobile */
+            .emoji {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Emoji fluttuanti -->
+    <div id="floating-emojis"></div>
+    
     <!-- Pulsante Admin -->
-    <button id="adminBtn" class="hidden">
+    <button id="adminBtn">
         <i class="fas fa-lock"></i> Admin
     </button>
     
@@ -563,10 +574,9 @@
         <!-- Header con informazioni principali -->
         <header class="main-header">
             <div class="title-icon">
-                <i class="fas fa-guitar"></i>
+                <i class="fas fa-violin"></i> <!-- Icona cambiata in violino -->
             </div>
             <h1>Il <span class="highlight">18°</span> di <span class="highlight">Flavio Carlo</span></h1>
-            <p class="tagline">Una festa rustica sotto il cielo pugliese</p>
             
             <div class="info-cards">
                 <div class="card">
@@ -599,10 +609,10 @@
             
             <!-- Selettore Lingua -->
             <div class="lang-selector">
-                <button onclick="openForm('it')" class="lang-btn active" id="langBtnIt">
+                <button id="langBtnIt" class="lang-btn active">
                     <i class="fas fa-flag"></i> Italiano
                 </button>
-                <button onclick="openForm('en')" class="lang-btn" id="langBtnEn">
+                <button id="langBtnEn" class="lang-btn">
                     <i class="fas fa-flag-usa"></i> English
                 </button>
             </div>
@@ -722,10 +732,10 @@
             </div>
             
             <div style="display: flex; justify-content: center; gap: 20px;">
-                <button onclick="adminLogin()" class="btn-submit" style="background: linear-gradient(135deg, var(--color-terracotta), var(--color-olive));">
+                <button id="adminLoginBtn" class="btn-submit" style="background: linear-gradient(135deg, var(--color-terracotta), var(--color-olive));">
                     <i class="fas fa-sign-in-alt"></i> Accedi
                 </button>
-                <button onclick="closeAdmin()" class="btn-submit" style="background: transparent; color: var(--color-dark); border: 2px solid var(--color-sand);">
+                <button id="adminCancelBtn" class="btn-submit" style="background: transparent; color: var(--color-dark); border: 2px solid var(--color-sand);">
                     <i class="fas fa-times"></i> Annulla
                 </button>
             </div>
@@ -737,7 +747,7 @@
                 <h2 class="section-title" style="margin: 0; color: var(--color-terracotta);">
                     <i class="fas fa-chart-bar"></i> Dashboard Admin
                 </h2>
-                <button onclick="adminLogout()" class="btn-submit" style="padding: 12px 25px; font-size: 1rem;">
+                <button id="adminLogoutBtn" class="btn-submit" style="padding: 12px 25px; font-size: 1rem;">
                     <i class="fas fa-sign-out-alt"></i> Esci
                 </button>
             </div>
@@ -773,6 +783,10 @@
         </footer>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <script>
         // ========== FIREBASE CONFIG ==========
         const firebaseConfig = {
@@ -793,21 +807,59 @@
         
         // ========== VARIABILI GLOBALI ==========
         let currentLang = 'it';
-        let chartInstance = null;
+        let emojis = [];
+        let mouseX = 0;
+        let mouseY = 0;
         
         // ========== FUNZIONI PRINCIPALI ==========
         
-        // Mostra pulsante admin dopo caricamento
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                document.getElementById('adminBtn').classList.remove('hidden');
-            }, 1000);
-            
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', () => {
             // Verifica connessione Firebase
             db.collection('risposte').limit(1).get()
                 .then(() => console.log('✅ Firebase connesso'))
                 .catch(err => console.warn('⚠️ Firebase:', err.message));
+            
+            // Inizializza gli event listener per i pulsanti
+            initEventListeners();
+            
+            // Crea le emoji fluttuanti
+            createFloatingEmojis(15);
+            
+            // Avvia l'animazione delle emoji
+            animateEmojis();
         });
+        
+        // Inizializza tutti gli event listener
+        function initEventListeners() {
+            // Pulsanti lingua
+            document.getElementById('langBtnIt').addEventListener('click', () => openForm('it'));
+            document.getElementById('langBtnEn').addEventListener('click', () => openForm('en'));
+            
+            // Pulsante admin
+            document.getElementById('adminBtn').addEventListener('click', showAdminLogin);
+            
+            // Pulsanti admin
+            document.getElementById('adminLoginBtn').addEventListener('click', adminLogin);
+            document.getElementById('adminCancelBtn').addEventListener('click', closeAdmin);
+            document.getElementById('adminLogoutBtn').addEventListener('click', adminLogout);
+            
+            // Form submission
+            document.getElementById('form-it').addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitForm(e.target, 'it');
+            });
+            document.getElementById('form-en').addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitForm(e.target, 'en');
+            });
+            
+            // Traccia la posizione del mouse per l'effetto sulle emoji
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+        }
         
         // Apre il modulo nella lingua selezionata
         function openForm(lang) {
@@ -826,21 +878,7 @@
             document.getElementById('successMessage').classList.remove('active');
         }
         
-        // Gestisce l'invio del form (tramite Formspree)
-        document.addEventListener('DOMContentLoaded', () => {
-            // Form Italiano
-            document.getElementById('form-it').addEventListener('submit', function(e) {
-                e.preventDefault();
-                submitForm(this, 'it');
-            });
-            
-            // Form Inglese
-            document.getElementById('form-en').addEventListener('submit', function(e) {
-                e.preventDefault();
-                submitForm(this, 'en');
-            });
-        });
-        
+        // Gestisce l'invio del form
         function submitForm(form, lang) {
             const nome = form.querySelector(`#nome-${lang}`).value.trim();
             const email = form.querySelector(`#email-${lang}`).value.trim();
@@ -952,7 +990,7 @@
         // ========== FUNZIONI ADMIN ==========
         
         // Mostra login admin
-        document.getElementById('adminBtn').addEventListener('click', () => {
+        function showAdminLogin() {
             document.getElementById('login').classList.add('active');
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminPassword').focus();
@@ -960,7 +998,7 @@
             // Nascondi altre sezioni
             document.querySelector('.section').style.display = 'none';
             document.getElementById('dashboard').classList.remove('active');
-        });
+        }
         
         // Login admin
         function adminLogin() {
@@ -1073,9 +1111,97 @@
                     guestList.innerHTML = '<p style="text-align: center; color: var(--color-terracotta); padding: 40px;">Errore nel caricamento dei dati.</p>';
                 });
         }
+        
+        // ========== EMOJI FLUTTUANTI ==========
+        
+        // Crea le emoji fluttuanti
+        function createFloatingEmojis(count) {
+            const container = document.getElementById('floating-emojis');
+            const emojiList = ['🎻', '🍷', '🍝', '🎪', '🎭', '🍕', '🍋', '🌞', '🎂', '🎉', '🎊', '🎈', '🥂', '🍾', '🍴'];
+            
+            for (let i = 0; i < count; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
+                
+                // Posizione casuale
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Dimensione casuale
+                const size = 1 + Math.random() * 1.5; // tra 1 e 2.5rem
+                
+                // Animazione CSS
+                const duration = 20 + Math.random() * 30; // tra 20 e 50 secondi
+                const delay = Math.random() * 5;
+                
+                emoji.style.left = `${posX}%`;
+                emoji.style.top = `${posY}%`;
+                emoji.style.fontSize = `${size}rem`;
+                emoji.style.animation = `float ${duration}s ease-in-out ${delay}s infinite alternate`;
+                
+                // Aggiungi stili per l'animazione float
+                const style = document.createElement('style');
+                if (!document.querySelector('#float-animation')) {
+                    style.id = 'float-animation';
+                    style.textContent = `
+                        @keyframes float {
+                            0% { transform: translate(0, 0) rotate(0deg); }
+                            25% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(5deg); }
+                            50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(0deg); }
+                            75% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(-5deg); }
+                            100% { transform: translate(0, 0) rotate(0deg); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                container.appendChild(emoji);
+                emojis.push({
+                    element: emoji,
+                    x: posX,
+                    y: posY,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: size
+                });
+            }
+        }
+        
+        // Anima le emoji con interazione mouse
+        function animateEmojis() {
+            const repulsionRadius = 100; // pixel
+            const repulsionForce = 0.05;
+            
+            emojis.forEach(emoji => {
+                const rect = emoji.element.getBoundingClientRect();
+                const emojiCenterX = rect.left + rect.width / 2;
+                const emojiCenterY = rect.top + rect.height / 2;
+                
+                // Calcola distanza dal mouse
+                const dx = mouseX - emojiCenterX;
+                const dy = mouseY - emojiCenterY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Se il mouse è abbastanza vicino, respingi l'emoji
+                if (distance < repulsionRadius) {
+                    const force = (repulsionRadius - distance) / repulsionRadius;
+                    const angle = Math.atan2(dy, dx);
+                    
+                    // Calcola lo spostamento
+                    const moveX = -Math.cos(angle) * force * repulsionForce * 100;
+                    const moveY = -Math.sin(angle) * force * repulsionForce * 100;
+                    
+                    // Applica la trasformazione
+                    emoji.element.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                } else {
+                    // Ritorna lentamente alla posizione originale
+                    emoji.element.style.transform = 'translate(0, 0)';
+                }
+            });
+            
+            requestAnimationFrame(animateEmojis);
+        }
     </script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </body>
 </html>
