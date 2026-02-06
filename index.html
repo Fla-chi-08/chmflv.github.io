@@ -191,8 +191,8 @@
             justify-content: center;
         }
         
-        /* EFFETTO LIQUID GLASS / LENTE */
-        .liquid-glass-lens {
+        /* Card "Dove" con effetto liquid glass */
+        .liquid-glass-card {
             background: transparent;
             padding: 30px 25px;
             border-radius: 20px;
@@ -207,7 +207,7 @@
             isolation: isolate;
         }
         
-        .liquid-glass-lens::before {
+        .liquid-glass-card::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -215,14 +215,14 @@
             width: 200%;
             height: 200%;
             background: url('https://i.ibb.co/RWxGpDg/2024-10-14.webp') center center / cover fixed;
-            filter: brightness(1.1) contrast(1.1);
+            filter: brightness(1.2) contrast(1.1);
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: -2;
-            transform: scale(0.8);
+            transform: scale(0.5); /* ZOOM OUT AUMENTATO */
         }
         
         /* Bordo esterno - effetto lente che distorce */
-        .liquid-glass-lens::after {
+        .liquid-glass-card::after {
             content: '';
             position: absolute;
             top: 0;
@@ -230,13 +230,13 @@
             right: 0;
             bottom: 0;
             border-radius: 20px;
-            border: 6px solid transparent;
+            border: 8px solid transparent; /* BORDO PIÙ SPESSO */
             background: linear-gradient(45deg, 
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.3) 25%,
-                rgba(255, 255, 255, 0.1) 50%,
-                rgba(255, 255, 255, 0.3) 75%,
-                rgba(255, 255, 255, 0.1) 100%
+                rgba(255, 255, 255, 0.15) 0%,
+                rgba(255, 255, 255, 0.35) 25%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.35) 75%,
+                rgba(255, 255, 255, 0.15) 100%
             ) border-box;
             -webkit-mask: 
                 linear-gradient(#fff 0 0) padding-box, 
@@ -247,23 +247,23 @@
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             z-index: -1;
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(4px);
             transition: all 0.6s ease;
         }
         
         /* Effetto di distorsione ai bordi */
-        .liquid-glass-lens .lens-distortion {
+        .liquid-glass-card .lens-distortion {
             position: absolute;
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
-            border-radius: 14px;
+            top: 8px; /* Allineato con bordo più spesso */
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border-radius: 12px;
             overflow: hidden;
             z-index: -1;
         }
         
-        .liquid-glass-lens .lens-distortion::before {
+        .liquid-glass-card .lens-distortion::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -271,93 +271,70 @@
             width: 200%;
             height: 200%;
             background: url('https://i.ibb.co/RWxGpDg/2024-10-14.webp') center center / cover fixed;
-            filter: brightness(1.2) contrast(1.2) blur(1px);
-            transform: scale(0.85);
+            filter: brightness(1.3) contrast(1.2) blur(2px);
+            transform: scale(0.55); /* ZOOM OUT AUMENTATO */
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: lensDistortion 4s infinite ease-in-out;
+            animation: lensDistortion 3s infinite ease-in-out;
         }
         
         @keyframes lensDistortion {
             0%, 100% { 
-                transform: scale(0.85) rotate(0deg); 
-                filter: brightness(1.2) contrast(1.2) blur(1px);
+                transform: scale(0.55) rotate(0deg); 
+                filter: brightness(1.3) contrast(1.2) blur(2px);
             }
             25% { 
-                transform: scale(0.87) rotate(0.5deg); 
-                filter: brightness(1.25) contrast(1.25) blur(1.2px);
+                transform: scale(0.57) rotate(0.8deg); 
+                filter: brightness(1.35) contrast(1.3) blur(2.5px);
             }
             50% { 
-                transform: scale(0.85) rotate(0deg); 
-                filter: brightness(1.2) contrast(1.2) blur(1px);
+                transform: scale(0.55) rotate(0deg); 
+                filter: brightness(1.3) contrast(1.2) blur(2px);
             }
             75% { 
-                transform: scale(0.87) rotate(-0.5deg); 
-                filter: brightness(1.25) contrast(1.25) blur(1.2px);
+                transform: scale(0.57) rotate(-0.8deg); 
+                filter: brightness(1.35) contrast(1.3) blur(2.5px);
             }
         }
         
-        .liquid-glass-lens:hover::before {
-            transform: scale(0.7);
+        .liquid-glass-card:hover::before {
+            transform: scale(0.45); /* ZOOM OUT ANCORA MAGGIORE */
         }
         
-        .liquid-glass-lens:hover .lens-distortion::before {
-            transform: scale(0.8);
-            filter: brightness(1.3) contrast(1.3) blur(1.5px);
-            animation-duration: 2s;
+        .liquid-glass-card:hover .lens-distortion::before {
+            transform: scale(0.5); /* ZOOM OUT ANCORA MAGGIORE */
+            filter: brightness(1.4) contrast(1.3) blur(3px);
+            animation-duration: 1.5s;
         }
         
-        .liquid-glass-lens:hover::after {
-            backdrop-filter: blur(5px);
-            border-width: 8px;
+        .liquid-glass-card:hover::after {
+            backdrop-filter: blur(6px);
+            border-width: 10px;
             background: linear-gradient(45deg, 
-                rgba(255, 255, 255, 0.2) 0%,
-                rgba(255, 255, 255, 0.4) 25%,
-                rgba(255, 255, 255, 0.2) 50%,
-                rgba(255, 255, 255, 0.4) 75%,
-                rgba(255, 255, 255, 0.2) 100%
+                rgba(255, 255, 255, 0.25) 0%,
+                rgba(255, 255, 255, 0.45) 25%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.45) 75%,
+                rgba(255, 255, 255, 0.25) 100%
             ) border-box;
         }
         
-        /* Contenuto al centro del riquadro */
-        .lens-content {
+        /* Contenuto della card "Dove" */
+        .liquid-glass-content {
             position: relative;
             z-index: 2;
-            background: rgba(255, 252, 247, 0.9);
+            background: rgba(255, 252, 247, 0.95);
             padding: 20px;
             border-radius: 15px;
             display: inline-block;
-            margin-top: 40px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(3px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: all 0.4s ease;
         }
         
-        .liquid-glass-lens:hover .lens-content {
+        .liquid-glass-card:hover .liquid-glass-content {
             transform: scale(1.05);
-            background: rgba(255, 252, 247, 0.95);
-        }
-        
-        .lens-content i {
-            font-size: 2rem;
-            color: var(--color-terracotta);
-            margin-bottom: 10px;
-            display: block;
-        }
-        
-        .lens-content h3 {
-            font-size: 1.1rem;
-            color: var(--color-olive);
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-        
-        .lens-content p {
-            font-size: 0.9rem;
-            color: var(--color-dark);
-            font-weight: 500;
+            background: rgba(255, 252, 247, 0.98);
         }
         
         .card:hover {
@@ -382,18 +359,19 @@
             transform: scaleX(1);
         }
         
-        .card i {
+        .card i, .liquid-glass-content i {
             font-size: 2.5rem;
             color: var(--color-terracotta);
             margin-bottom: 20px;
             transition: transform 0.3s;
+            display: block;
         }
         
-        .card:hover i {
+        .card:hover i, .liquid-glass-card:hover .liquid-glass-content i {
             transform: rotate(10deg) scale(1.1);
         }
         
-        .card h3 {
+        .card h3, .liquid-glass-content h3 {
             font-size: 1.1rem;
             color: var(--color-olive);
             margin-bottom: 12px;
@@ -402,7 +380,7 @@
             font-weight: 600;
         }
         
-        .card p {
+        .card p, .liquid-glass-content p {
             font-size: 1.3rem;
             color: var(--color-dark);
             font-weight: 700;
@@ -671,12 +649,8 @@
                 gap: 25px;
             }
             
-            .card, .liquid-glass-lens {
+            .card, .liquid-glass-card {
                 height: 250px;
-            }
-            
-            .liquid-glass-lens {
-                order: 2;
             }
         }
         
@@ -691,7 +665,7 @@
             #adminBtn { top: 15px; right: 15px; padding: 8px 16px; font-size: 0.9rem; }
             .stats-grid { grid-template-columns: 1fr; gap: 15px; }
             .btn-primary, .btn-submit { padding: 18px 30px; font-size: 1.1rem; width: 100%; }
-            .lens-content { margin-top: 30px; padding: 15px; }
+            .liquid-glass-content { padding: 15px; }
         }
     </style>
 </head>
@@ -708,7 +682,6 @@
                 <i class="fas fa-guitar"></i> 🎉🎂
             </div>
             <h1>Il <span class="highlight">18°</span> di <span class="highlight">Flavio Carlo</span></h1>
-            <p class="tagline">Una festa rustica sotto il cielo pugliese 🌞🎶🍷</p>
             
             <div class="info-cards">
                 <div class="card">
@@ -718,21 +691,15 @@
                     <p class="location-note">Ore 20:30</p>
                 </div>
                 
-                <!-- LIQUID GLASS LENS EFFECT -->
-                <div class="liquid-glass-lens">
+                <!-- Card "Dove" con effetto liquid glass -->
+                <div class="liquid-glass-card">
                     <div class="lens-distortion"></div>
-                    <div class="lens-content">
-                        <i class="fas fa-search"></i>
-                        <h3>Visione Pugliese 🔍</h3>
-                        <p>Passa il mouse per l'effetto lente</p>
+                    <div class="liquid-glass-content">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Dove 📍🏡</h3>
+                        <p>Casina dei nonni</p>
+                        <p class="location-note">Oria (BR), Puglia 🇮🇹</p>
                     </div>
-                </div>
-                
-                <div class="card">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <h3>Dove 📍🏡</h3>
-                    <p>Casina dei nonni</p>
-                    <p class="location-note">Oria (BR), Puglia 🇮🇹</p>
                 </div>
             </div>
             
