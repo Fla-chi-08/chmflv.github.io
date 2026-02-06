@@ -13,6 +13,7 @@
             --color-sky: #A7CECB;
             --color-dark: #3A2D28;
             --color-light: #FFFCF7;
+            --color-danger: #e74c3c;
         }
         
         * {
@@ -242,7 +243,7 @@
                 linear-gradient(#fff 0 0) padding-box, 
                 linear-gradient(#fff 0 0);
             mask: 
-                linear-gradient(#fff 0 0) padding-box, 
+                linear-gradient(#fff 0 0) content-box, 
                 linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -582,6 +583,53 @@
             letter-spacing: 0.5px;
         }
         
+        /* Pulsante elimina */
+        .btn-delete {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, var(--color-danger), #c0392b);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            background: linear-gradient(135deg, #c0392b, var(--color-danger));
+        }
+        
+        /* Pulsante elimina tutto */
+        .btn-delete-all {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--color-danger), #c0392b);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .btn-delete-all:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+            background: linear-gradient(135deg, #c0392b, var(--color-danger));
+        }
+        
         .success-message {
             background: rgba(167, 206, 203, 0.15);
             border: 2px solid var(--color-sky);
@@ -849,6 +897,10 @@
                 </div>
             </div>
             
+            <div id="deleteAllContainer" style="text-align: center; margin: 20px 0;">
+                <!-- Qui verrà inserito il pulsante "Elimina tutte le risposte" se ci sono risposte -->
+            </div>
+            
             <h3 style="color: var(--color-dark); margin: 40px 0 20px;">
                 <i class="fas fa-list"></i> Elenco Partecipanti 📋
             </h3>
@@ -998,6 +1050,8 @@
             }
         }
         
+        // ========== FUNZIONI ADMIN ==========
+        
         document.getElementById('adminBtn').addEventListener('click', () => {
             document.getElementById('login').classList.add('active');
             document.getElementById('adminPassword').value = '';
@@ -1009,7 +1063,7 @@
         
         function adminLogin() {
             const password = document.getElementById('adminPassword').value;
-            const correctPassword = 'admin18';
+            const correctPassword = 'admin18'; // MODIFICA QUESTA PASSWORD CON UNA PIÙ SICURA!
             
             if (password === correctPassword) {
                 document.getElementById('login').classList.remove('active');
@@ -1037,8 +1091,46 @@
             document.getElementById('login').classList.remove('active');
         }
         
+        // Funzione per eliminare una singola risposta
+        async function deleteResponse(id) {
+            if (confirm('Sei sicuro di voler eliminare questa risposta? Questa azione non può essere annullata.')) {
+                try {
+                    await db.collection('risposte').doc(id).delete();
+                    console.log('✅ Risposta eliminata, ID:', id);
+                    loadAdminDashboard();
+                } catch (error) {
+                    console.error('❌ Errore nell\'eliminazione:', error);
+                    alert('Errore nell\'eliminazione della risposta.');
+                }
+            }
+        }
+        
+        // Funzione per eliminare tutte le risposte
+        async function deleteAllResponses() {
+            if (confirm('ATTENZIONE: Sei sicuro di voler eliminare TUTTE le risposte? Questa azione non può essere annullata.')) {
+                try {
+                    const snapshot = await db.collection('risposte').get();
+                    const batch = db.batch();
+                    
+                    snapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    
+                    await batch.commit();
+                    console.log('✅ Tutte le risposte eliminate');
+                    loadAdminDashboard();
+                    alert('Tutte le risposte sono state eliminate con successo!');
+                } catch (error) {
+                    console.error('❌ Errore nell\'eliminazione di tutte le risposte:', error);
+                    alert('Errore nell\'eliminazione delle risposte.');
+                }
+            }
+        }
+        
+        // Carica dati dashboard admin
         function loadAdminDashboard() {
             const guestList = document.getElementById('guestList');
+            const deleteAllContainer = document.getElementById('deleteAllContainer');
             guestList.innerHTML = '<p style="text-align: center; color: var(--color-olive); padding: 30px;">Caricamento in corso...</p>';
             
             db.collection('risposte')
@@ -1053,11 +1145,13 @@
                         document.getElementById('totalCount').textContent = '0';
                         document.getElementById('yesCount').textContent = '0';
                         document.getElementById('noCount').textContent = '0';
+                        deleteAllContainer.innerHTML = '';
                         return;
                     }
                     
                     snapshot.forEach(doc => {
                         const data = doc.data();
+                        const id = doc.id;
                         
                         if (data.attendance === 'si') {
                             si++;
@@ -1076,13 +1170,21 @@
                         const language = data.language === 'it' ? '🇮🇹 IT' : '🇬🇧 EN';
                         
                         html += `
-                            <div style="padding: 20px; margin-bottom: 15px; background: ${data.attendance === 'si' ? 'rgba(138, 155, 110, 0.08)' : 'rgba(217, 125, 84, 0.08)'}; border-radius: 12px; border-left: 4px solid ${data.attendance === 'si' ? 'var(--color-olive)' : 'var(--color-terracotta)'};">
+                            <div style="
+                                padding: 20px; 
+                                margin-bottom: 15px; 
+                                background: ${data.attendance === 'si' ? 'rgba(138, 155, 110, 0.08)' : 'rgba(217, 125, 84, 0.08)'}; 
+                                border-radius: 12px; 
+                                border-left: 4px solid ${data.attendance === 'si' ? 'var(--color-olive)' : 'var(--color-terracotta)'};
+                                position: relative;
+                            ">
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
                                     <div>
                                         <strong style="font-size: 1.1rem;">${nome}</strong>
                                     </div>
                                     <div style="text-align: right;">
                                         <div>${language}</div>
+                                        <div style="font-size: 0.8rem; color: var(--color-dark); opacity: 0.7;">ID: ${id.substring(0, 8)}...</div>
                                     </div>
                                 </div>
                                 <div style="color: var(--color-dark); font-size: 0.95rem;">
@@ -1091,15 +1193,40 @@
                                     ${dietary}
                                     ${message}
                                 </div>
+                                <div style="margin-top: 15px; text-align: right;">
+                                    <button onclick="deleteResponse('${id}')" class="btn-delete">
+                                        <i class="fas fa-trash"></i> Elimina
+                                    </button>
+                                </div>
                             </div>
                         `;
                     });
                     
-                    document.getElementById('totalCount').textContent = si + no;
+                    // Aggiorna contatori
+                    const total = si + no;
+                    document.getElementById('totalCount').textContent = total;
                     document.getElementById('yesCount').textContent = si;
                     document.getElementById('noCount').textContent = no;
                     
+                    // Mostra pulsante "Elimina tutte le risposte" se ci sono risposte
+                    if (total > 0) {
+                        deleteAllContainer.innerHTML = `
+                            <button onclick="deleteAllResponses()" class="btn-delete-all">
+                                <i class="fas fa-trash-alt"></i> Elimina TUTTE le risposte (${total})
+                            </button>
+                            <p style="color: var(--color-danger); font-size: 0.9rem; margin-top: 10px;">
+                                <i class="fas fa-exclamation-triangle"></i> Attenzione: questa azione non può essere annullata
+                            </p>
+                        `;
+                    } else {
+                        deleteAllContainer.innerHTML = '';
+                    }
+                    
+                    // Aggiorna lista
                     guestList.innerHTML = html;
+                    
+                    // Scrolla in cima alla lista
+                    guestList.scrollTop = 0;
                 })
                 .catch(err => {
                     console.error('Errore caricamento dati:', err);
